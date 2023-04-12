@@ -331,13 +331,13 @@ def Control_z_max_NR(z_max, Force_target, L_contact_gw, L_g):
                 ite_criteria = False
             if -0.01*Force_target<error_on_zmax_f(dz,overlap_L,k_L,Force_target) and error_on_zmax_f(dz,overlap_L,k_L,Force_target)<0.01*Force_target:
                 ite_criteria = False
-        z_max = z_max + dz
+        #z_max = z_max + dz
+        return False, dz, F
 
     else :
         #if there is no contact with the upper wall, the wall is reset
-        z_max = Reset_z_max(L_g,Force_target)
-
-    return z_max, F
+        z_max = Reset_z_max(L_g, Force_target)
+        return True, z_max, F
 
 #-------------------------------------------------------------------------------
 
