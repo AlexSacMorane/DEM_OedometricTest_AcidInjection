@@ -67,7 +67,7 @@ class Contact_gw_Tempo:
             Nothing, but the attribut concerning the overlap is updated (a float)
     '''
     self.overlap = new_overlap
-    self.nwg = new_overlap
+    self.nwg = new_nwg
 
 #-------------------------------------------------------------------------------
 
@@ -86,37 +86,37 @@ class Contact_gw_Tempo:
     if self.nature == 'gwlat':
         #unlinear stiffness
         Fwg_n = self.k*self.overlap**(3/2)
-        Fwg = Fwg_n*nwg
+        Fwg = Fwg_n*self.nwg
         self.Fwg_n = Fwg_n
         self.g.add_F(Fwg, self.g.center - self.g.radius*self.nwg)
         #damping
         gamma = -math.log(self.coeff_restitution)/math.sqrt(math.pi**2+math.log(self.coeff_restitution)**2)
         mass_eq = self.g.mass
         eta = 2 * gamma * math.sqrt(mass_eq*self.k)
-        Fwg_damp_n = -np.dot(self.g.v,nwg)*eta
-        Fwg_damp = Fwg_damp_n*nwg
+        Fwg_damp_n = -np.dot(self.g.v,self.nwg)*eta
+        Fwg_damp = Fwg_damp_n*self.nwg
         self.Fwg_damp_n = Fwg_damp_n
         self.g.add_F(Fwg_damp, self.g.center - self.g.radius*self.nwg)
 
     elif self.nature == 'gwz_min':
         #unlinear stiffness
         Fwg_n = self.k*self.overlap**(3/2)
-        Fwg = Fwg_n*nwg
+        Fwg = Fwg_n*self.nwg
         self.Fwg_n = Fwg_n
         self.g.add_F(Fwg, self.g.center - self.g.radius*self.nwg)
         #damping
         gamma = -math.log(self.coeff_restitution)/math.sqrt(math.pi**2+math.log(self.coeff_restitution)**2)
         mass_eq = self.g.mass
         eta = 2 * gamma * math.sqrt(mass_eq*self.k)
-        Fwg_damp_n = -np.dot(self.g.v,nwg)*eta
-        Fwg_damp = Fwg_damp_n*nwg
+        Fwg_damp_n = -np.dot(self.g.v,self.nwg)*eta
+        Fwg_damp = Fwg_damp_n*self.nwg
         self.Fwg_damp_n = Fwg_damp_n
         self.g.add_F(Fwg_damp, self.g.center - self.g.radius*self.nwg)
 
     elif self.nature == 'gwz_max':
         #unlinear stiffness
         Fwg_n = self.k*self.overlap**(3/2)
-        Fwg = Fwg_n*nwg
+        Fwg = Fwg_n*self.nwg
         self.Fwg_n = Fwg_n
         self.g.add_F(Fwg, self.g.center - self.g.radius*self.nwg)
         #damping
@@ -137,7 +137,7 @@ class Contact_gw_Tempo:
         Output :
             Nothing, but attributes are updated
    """
-   if self.overlap_normal > 0 and self.mu > 0:
+   if self.overlap > 0 and self.mu > 0:
 
        if self.tangential_old_statut:
            #if a reaction has been already computed
@@ -147,7 +147,7 @@ class Contact_gw_Tempo:
            self.tangential_old_statut = True
 
        #compute the tangential overlap
-       r = self.g.radius - self.overlap_normal
+       r = self.g.radius - self.overlap
        v_g = self.g.v + r*np.cross(self.pc_normal, self.g.w)
        v_tangential = v_g - np.dot(v_g, self.pc_normal)*self.pc_normal
        self.overlap_tangential = self.overlap_tangential + v_tangential*dt_DEM
