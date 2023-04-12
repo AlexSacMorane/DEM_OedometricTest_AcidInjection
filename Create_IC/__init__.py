@@ -20,6 +20,7 @@ import Create_IC.Grain_ic
 import Create_IC.Contact_gg_ic
 import Create_IC.Contact_gw_ic
 import Grain
+import Owntools.Write
 
 #-------------------------------------------------------------------------------
 #Function
@@ -73,7 +74,7 @@ def LG_tempo(dict_geometry, dict_ic, dict_material, dict_sample, dict_sollicitat
         #add element in dict
         dict_sample['z_box_max'] = z_max
 
-        DEM_loading(dict_ic, dict_material, dict_sample, dict_sollicitation, simulation_report)
+        DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollicitation, simulation_report)
 
         #update element in dict
         dict_sample['z_box_min_ic'] = dict_sample['z_box_max']
@@ -89,18 +90,19 @@ def LG_tempo(dict_geometry, dict_ic, dict_material, dict_sample, dict_sollicitat
         for g_tempo in L_g_tempo:
             dict_ic['L_g_tempo'].append(g_tempo)
 
-    DEM_loading(dict_ic, dict_material, dict_sample, dict_sollicitation, simulation_report)
+    DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollicitation, simulation_report)
 
     simulation_report.write_and_print(str(len(dict_ic['L_g_tempo']))+' / '+str(dict_geometry['N_grain'])+' grains have been created\n','\n'+str(len(dict_ic['L_g_tempo']))+' / '+str(dict_geometry['N_grain'])+' grains have been created\n')
 
 #-------------------------------------------------------------------------------
 
-def DEM_loading(dict_ic, dict_material, dict_sample, dict_sollicitation, simulation_report):
+def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollicitation, simulation_report):
     """
     Loading the granular system.
 
         Input :
             an initial condition dictionnary (a dict)
+            a geometry dictionnary (a dict)
             a material dictionnary (a dict)
             a smaple dictionnary (a dict)
             a sollicitations dictionnary (a dict)
@@ -166,7 +168,7 @@ def DEM_loading(dict_ic, dict_material, dict_sample, dict_sollicitation, simulat
         #check if some grains are outside of the study box
         L_ig_to_delete = []
         for id_grain in range(len(dict_ic['L_g_tempo'])):
-            if np.linalg.norm([dict_ic['L_g_tempo'][id_grain].center[0], dict_ic['L_g_tempo'][id_grain].center[1]]) > dict_sample['D_oedo']:
+            if np.linalg.norm([dict_ic['L_g_tempo'][id_grain].center[0], dict_ic['L_g_tempo'][id_grain].center[1]]) > dict_sample['D_oedo']/2:
                 L_ig_to_delete.append(id_grain)
             elif dict_ic['L_g_tempo'][id_grain].center[2] < z_min :
                 L_ig_to_delete.append(id_grain)
@@ -247,7 +249,7 @@ def Create_grains(dict_ic, dict_geometry, dict_sample, dict_material, simulation
             angle = random.uniform(0, 2*math.pi)
             center = np.array([r_to_center*math.cos(angle),\
                                r_to_center*math.sin(angle),\
-                               random.uniform(dict_sample['z_box_min_ic']+1.1*radius,dict_sample['z_box_min_ic'] + dict_sample['dz_creation'])])
+                               random.uniform(dict_sample['z_box_min_ic']+1.1*radius, dict_sample['z_box_min_ic'] + dict_sample['dz_creation'])])
             g_tempo = Grain_ic.Grain_Tempo(dict_ic['last_id']+1, center, radius, dict_material)
             grain_created = True
             for grain in dict_ic['L_g_tempo']:
@@ -392,7 +394,7 @@ def Reset_z_max(L_g,Force):
     id_grain_max = None
     for id_grain in range(len(L_g)):
         grain = L_g[id_grain]
-        z_max_grain = grain.center[1] + grain.radius
+        z_max_grain = grain.center[2] + grain.radius
 
         if z_max != None and z_max_grain > z_max:
             z_max = z_max_grain
@@ -409,57 +411,20 @@ def Reset_z_max(L_g,Force):
 
 #-------------------------------------------------------------------------------
 
-def From_LG_tempo_to_usable(dict_ic, dict_material, dict_sample):
+def From_LG_tempo_to_usable(dict_ic, dict_sample):
     """
     Create a real grain from a temporary grain.
 
-    The phase variable is built. The distance between the point of the mesh and the particle center determines the value of the variable.
-    A cosine profile is applied inside the interface.
-
         Input :
             an initial condition dictionnary (a dict)
-            a material dictionnary (a dict)
             a sample dictionnary (a dict)
         Output :
             Nothing, but the sample dictionnary is updated with the list of real grains
     """
     L_g = []
     for grain_tempo in dict_ic['L_g_tempo']:
-
-        L_r = []
-        L_theta_r = []
-        L_border = []
-        L_border_x = []
-        L_border_y = []
-        for i in range(dict_sample['grain_discretisation']):
-            theta = i/dict_sample['grain_discretisation']*2*math.pi
-            L_r.append(grain_tempo.radius)
-            L_theta_r.append(theta)
-            L_border.append(grain_tempo.center + grain_tempo.radius*np.array([math.cos(theta), math.sin(theta)]))
-            L_border_x.append(grain_tempo.center[0] + grain_tempo.radius*math.cos(theta))
-            L_border_y.append(grain_tempo.center[1] + grain_tempo.radius*math.sin(theta))
-        L_border.append(L_border[0])
-        L_border_x.append(L_border_x[0])
-        L_border_y.append(L_border_y[0])
-
-        dict_ic_to_real = {
-        'Id' : grain_tempo.id,
-        'Center' : grain_tempo.center,
-        'L_r' : L_r,
-        'L_theta_r' : L_theta_r,
-        'L_border' : L_border,
-        'L_border_x' : L_border_x,
-        'L_border_y' : L_border_y,
-        'Y' : grain_tempo.y,
-        'Nu' : grain_tempo.nu,
-        'Rho_surf' : grain_tempo.rho_surf,
-        'Surface' : grain_tempo.surface,
-        'Mass' : grain_tempo.mass,
-        'Inertia' : grain_tempo.inertia
-        }
         #create real grain
-        L_g.append(Grain.Grain(dict_ic_to_real, dict_material, dict_sample))
-
+        L_g.append(Grain.Grain(grain_tempo))
     #Add element in dict
     dict_sample['L_g'] = L_g
 
