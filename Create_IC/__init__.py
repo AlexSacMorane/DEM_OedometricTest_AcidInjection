@@ -178,7 +178,11 @@ def DEM_loading(dict_ic, dict_material, dict_sample, dict_sollicitation, simulat
             dict_ic['L_g_tempo'].pop(id_grain)
 
         #Control the z_max to have the pressure target
-        dict_sample['z_box_max'], Fv = Control_z_max_NR(dict_sample['z_box_max'], dict_sollicitation['Vertical_Confinement_Force'], dict_ic['L_contact_gw'], dict_ic['L_g_tempo'])
+        Reset, result, Fv = Control_z_max_NR(dict_sample['z_box_max'], dict_sollicitation['Vertical_Confinement_Force'], dict_ic['L_contact_gw'], dict_ic['L_g_tempo'])
+        if Reset :
+            dict_sample['z_box_max'] = result
+        else :
+            dict_sample['z_box_max'] = dict_sample['z_box_max'] + result
 
         #Tracker
         F = F_total(dict_ic['L_g_tempo'])
