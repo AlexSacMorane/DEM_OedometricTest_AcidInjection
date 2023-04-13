@@ -39,6 +39,8 @@ class Contact_gw_Tempo:
              the nature of the wall (a string)
              the normal of the contact (a 3x1 numpy array)
              an overlap (a float)
+         Output :
+             a contact grain - wall is generated
     """
     self.id = ID
     self.g = G
