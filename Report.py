@@ -12,6 +12,7 @@ This report is a .txt file with information from the simulation
 
 import os
 import time
+from datetime import datetime
 
 #-------------------------------------------------------------------------------
 #Class
@@ -21,7 +22,7 @@ class Report:
 
 #-------------------------------------------------------------------------------
 
-    def __init__(self, Name, Datetime):
+    def __init__(self, Name):
         '''
         Defining a report.
 
@@ -36,7 +37,7 @@ class Report:
             if Name[-4:] != '.txt':
                 Name = Name + '.txt'
             self.name = Name
-            self.datetimestart = str(Datetime)
+            self.datetimestart = str(datetime.now())
 
             Last_modification = 0
             L_file = os.listdir()
@@ -47,7 +48,7 @@ class Report:
 
             file_to_write = open(self.name,'w')
             file_to_write.write('Last compilation: '+str(time.ctime(Last_modification))+'\n')
-            file_to_write.write('Simulation started '+str(Datetime)[:19]+'\n\n')
+            file_to_write.write('Simulation started '+str(datetime.now())[:19]+'\n\n')
             file_to_write.close()
         else:
             print('Error')
@@ -91,7 +92,7 @@ class Report:
 
 #-------------------------------------------------------------------------------
 
-    def tic_tempo(self, Datetime):
+    def tic_tempo(self):
         '''
         Save a temporary start time.
 
@@ -103,11 +104,11 @@ class Report:
             Output :
                 Nothing but the report gets an updated attribut (a datetime class)
         '''
-        self.datetimestart_tempo = str(Datetime)
+        self.datetimestart_tempo = str(datetime.now())
 
 #-------------------------------------------------------------------------------
 
-    def tac_tempo(self, Datetime, Step_name):
+    def tac_tempo(self, Step_name):
         '''
         Save a temporary start time.
 
@@ -119,8 +120,7 @@ class Report:
             Output :
                 Nothing but the report gets an updated attribut (a datetime class) and the report is updated (a file)
         '''
-
-        self.datetimeend_tempo = str(Datetime)
+        self.datetimeend_tempo = str(datetime.now())
 
         dyear = int(self.datetimeend_tempo[:4])-int(self.datetimestart_tempo[:4])
         dmonth = int(self.datetimeend_tempo[5:7])-int(self.datetimestart_tempo[5:7])
@@ -139,12 +139,12 @@ class Report:
         dt = dt % 60
 
         file_to_write = open(self.name,'a')
-        file_to_write.write('Time spent during "'+Step_name+'" : '+str(dt_day)+' days '+str(dt_hour)+' hours '+str(dt_min)+' min '+str(dt)+' sec\n')
+        file_to_write.write_and_print('\nTime spent during "'+Step_name+'" : '+str(dt_day)+' days '+str(dt_hour)+' hours '+str(dt_min)+' min '+str(dt)+' sec\n\n','\nTime spent during "'+Step_name+'" : '+str(dt_day)+' days '+str(dt_hour)+' hours '+str(dt_min)+' min '+str(dt)+' sec\n')
         file_to_write.close()
 
 #-------------------------------------------------------------------------------
 
-    def end(self, Datetime):
+    def end(self):
      '''
      Work with init() to compute the total time cost of the simulation.
 
@@ -154,7 +154,7 @@ class Report:
          Output :
              Nothing but the file is updated (a file)
      '''
-     self.datetimeend = str(Datetime)
+     self.datetimeend = str(datetime.now())
 
      dyear = int(self.datetimeend[:4])-int(self.datetimestart[:4])
      dmonth = int(self.datetimeend[5:7])-int(self.datetimestart[5:7])
@@ -173,8 +173,8 @@ class Report:
      dt = dt % 60
 
      file_to_write = open(self.name,'a')
-     file_to_write.write('\n'+'Simulation ended '+str(Datetime)[:19]+'\n')
-     file_to_write.write('Time spent : '+str(dt_day)+' days '+str(dt_hour)+' hours '+str(dt_min)+' min '+str(dt)+' sec\n')
+     file_to_write.write('\n'+'Simulation ended '+str(datetime.now())[:19]+'\n')
+     file_to_write.write_and_print('\nTime spent : '+str(dt_day)+' days '+str(dt_hour)+' hours '+str(dt_min)+' min '+str(dt)+' sec\n','\nTime spent : '+str(dt_day)+' days '+str(dt_hour)+' hours '+str(dt_min)+' min '+str(dt)+' sec')
      file_to_write.close()
 
  #-------------------------------------------------------------------------------
