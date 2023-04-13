@@ -51,7 +51,6 @@ class Contact_gw_Tempo:
     self.k = factor*4/3*self.g.y/(1-self.g.nu*self.g.nu)*math.sqrt(self.g.radius) #Hertz law
     self.coeff_restitution = dict_material['coeff_restitution']
     self.mu = 0
-    self.kt = 0
     self.tangential_old_statut = False
     self.overlap_tangential = np.array([0, 0, 0])
 
@@ -147,6 +146,18 @@ class Contact_gw_Tempo:
            self.overlap_tangential = self.overlap_tangential - np.dot(self.overlap_tangential, self.pc_normal)*self.pc_normal
        else:
            self.tangential_old_statut = True
+
+       #spring law
+       G_eq = self.g.g/(1-self.g.nu)
+       R_eq = self.g.radius
+       kt0 = 8 * G_eq *math.sqrt(R_eq*abs(self.overlap))
+       factor = 5
+       kt = factor*kt0*math.sqrt(max(1-2/3*kt0*np.linalg.norm(self.overlap_tangential)/self.mu/abs(self.Fwg_n),0)) #not linear spring
+
+       #damping law
+       gamma = -math.log(self.coeff_restitution)/math.sqrt(math.pi**2+math.log(self.coeff_restitution)**2)
+       mass_eq = self.g.mass
+       eta = 2 * gamma * math.sqrt(mass_eq*kt)/2 #damping tangential term is corrected from the damping normal term
 
        #compute the tangential overlap
        r = self.g.radius - self.overlap
