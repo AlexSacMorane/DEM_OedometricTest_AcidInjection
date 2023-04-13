@@ -316,6 +316,6 @@ def Grains_Wall_contact_Neighborhood(wall_neighborhood, dict_material, dict_samp
           L_ij_contact_gw.pop(i_contact)
 
       #Update dict
-      dict_ic['L_contact_gw_ij'] = L_ij_contact_gw
-      dict_ic['L_contact_gw'] = L_contact_gw
-      dict_ic['id_contact_gw'] = id_contact
+      dict_sample['L_contact_gw_ij'] = L_ij_contact_gw
+      dict_sample['L_contact_gw'] = L_contact_gw
+      dict_sample['id_contact_gw'] = id_contact
