@@ -92,21 +92,16 @@ def All_parameters():
 
     #DEM parameters
     dt_DEM_crit = math.pi*R_50/(0.16*nu+0.88)*math.sqrt(rho*(2+2*nu)/Y) #s critical time step from O'Sullivan 2011
-    dt_DEM = dt_DEM_crit/8 #s time step during DEM simulation
+    dt_DEM = dt_DEM_crit/7 #s time step during DEM simulation
     factor_neighborhood = 1.5 #margin to detect a grain into a neighborhood
     i_update_neighborhoods = 500 #the frequency of the update of the neighborhood of the grains and the walls
     #Stop criteria of the DEM
-    i_DEM_stop = 1500 #maximum iteration for one DEM simulation
-    Ecin_ratio = 0.0002
-    n_window_stop = 100
-    dz_box_max_stop = 35
+    i_DEM_stop = 4000 #maximum iteration for one DEM simulation
+    Ecin_ratio = 0.0005
 
     #List of plot to do
-    Debug = True #plot configuration before and after DEM simulation
-    Debug_DEM = False #plot configuration inside DEM
+    Debug_DEM = True #plot configuration
     i_print_plot = 300 #frenquency of the print and plot (if Debug_DEM) in DEM step
-    #
-    L_flag_plot = []
 
     #Save the simulation
     SaveData = False #Save data or not
@@ -125,7 +120,6 @@ def All_parameters():
     dict_algorithm = {
     'n_dissolution' : n_dissolution,
     'f_mass0_dissolved_mas' : f_mass0_dissolved_mas,
-    'Debug' : Debug,
     'Debug_DEM' : Debug_DEM,
     'i_print_plot' : i_print_plot,
     'factor_neighborhood' : factor_neighborhood,
@@ -135,10 +129,7 @@ def All_parameters():
     'i_update_neighborhoods': i_update_neighborhoods,
     'i_DEM_stop' : i_DEM_stop,
     'Ecin_ratio' : Ecin_ratio,
-    'n_window_stop' : n_window_stop,
-    'dz_box_max_stop' : dz_box_max_stop,
     'foldername' : foldername,
-    'L_flag_plot' : L_flag_plot,
     }
 
     #---------------------------------------------------------------------------
