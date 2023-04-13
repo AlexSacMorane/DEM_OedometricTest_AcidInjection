@@ -273,7 +273,7 @@ def Grains_Wall_contact_Neighborhood(wall_neighborhood, dict_material, dict_samp
       if d_oedo/2 < (r_to_center+grain.radius) and (grain.id,-1) not in L_ij_contact_gw:
           overlap = (r_to_center+grain.radius) - d_oedo/2
           nwg = np.array([-grain.center[0], -grain.center[1], 0])/np.linalg.norm(np.array([-grain.center[0], -grain.center[1], 0]))
-          L_contact_gw.append(Contact_gw_Tempo(id_contact, grain, dict_material, 'gwlat', nwg, overlap))
+          L_contact_gw.append(Contact_gw(id_contact, grain, dict_material, 'gwlat', nwg, overlap))
           L_ij_contact_gw.append((grain.id,-1))
           id_contact = id_contact + 1
       elif d_oedo/2 < (r_to_center+grain.radius) and (grain.id,-1) in L_ij_contact_gw:
@@ -288,7 +288,7 @@ def Grains_Wall_contact_Neighborhood(wall_neighborhood, dict_material, dict_samp
       if p_z_min < z_box_min and (grain.id,-2) not in L_ij_contact_gw:
           overlap = z_box_min - p_z_min
           nwg = np.array([0, 0, 1])
-          L_contact_gw.append(Contact_gw_Tempo(id_contact, grain, dict_material, 'gwz_min', nwg, overlap))
+          L_contact_gw.append(Contact_gw(id_contact, grain, dict_material, 'gwz_min', nwg, overlap))
           L_ij_contact_gw.append((grain.id,-2))
           id_contact = id_contact + 1
       elif p_z_min < z_box_min and (grain.id,-2) in L_ij_contact_gw:
@@ -303,7 +303,7 @@ def Grains_Wall_contact_Neighborhood(wall_neighborhood, dict_material, dict_samp
       if z_box_max < p_z_max and (grain.id,-3) not in L_ij_contact_gw:
           overlap = p_z_max - z_box_max
           nwg = np.array([0, 0, -1])
-          L_contact_gw.append(Contact_gw_Tempo(id_contact, grain, dict_material, 'gwz_max', nwg, overlap))
+          L_contact_gw.append(Contact_gw(id_contact, grain, dict_material, 'gwz_max', nwg, overlap))
           L_ij_contact_gw.append((grain.id,-3))
           id_contact = id_contact + 1
       elif z_box_max < p_z_max and (grain.id,-3) in L_ij_contact_gw:
