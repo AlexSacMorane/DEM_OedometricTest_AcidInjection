@@ -143,12 +143,25 @@ def main_simulation(dict_algorithm, dict_geometry, dict_material, dict_sample, d
         simulation_report.tic()
         dict_algorithm['i_dissolution'] = dict_algorithm['i_dissolution'] + 1
 
+        #dissolve material
         dissolve_material(dict_geometry, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
-
         simulation_report.write_and_print('\nStep '+str(dict_algorithm['i_dissolution'])+'/'+str(dict_algorithm['n_dissolution'])+' : percentage of initial mass dissolved '+str(round(dict_tracker['L_mass_dissolved'][-1]/dict_tracker['L_mass'][0],2))+'/'+str(dict_algorithm['f_mass0_dissolved_mas'])+'\n\n',\
                                           '\nStep '+str(dict_algorithm['i_dissolution'])+'/'+str(dict_algorithm['n_dissolution'])+' : percentage of initial mass dissolved '+str(round(dict_tracker['L_mass_dissolved'][-1]/dict_tracker['L_mass'][0],2))+'/'+str(dict_algorithm['f_mass0_dissolved_mas'])+'\n')
 
-        simulation_report.tac('New dissolution step')
+        #load
+        DEM_loading(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_sollicitation, simulation_report)
+
+        #tracker
+        dict_tracker['L_z_box_max'].append(dict_sample['z_box_max'])
+        Owntools.Compute.Compute_compacity(dict_sample)
+        dict_tracker['L_compacity'].append(dict_sample['compacity'])
+        Owntools.Compute.Compute_k0(dict_sample)
+        dict_tracker['L_k0'].append(dict_sample['k0'])
+
+        #save
+        Owntools.Save.save_dicts('Dicts/save_tempo', dict_algorithm, dict_geometry, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
+
+        simulation_report.tac('Dissolution step '+str(dict_algorithm['i_dissolution']))
 
 #-------------------------------------------------------------------------------
 
@@ -295,12 +308,13 @@ def DEM_loading(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_
 
 #-------------------------------------------------------------------------------
 
-def close_main(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report):
+def close_main(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report):
     '''
-    Close the PFDEM.
+    Close the simulation.
 
         Input :
             an algorithm dictionnary (a dict)
+            a geometry dictionnary (a dict)
             a material dictionnary (a dict)
             a sample dictionnary (a dict)
             a sollicitation dictionnary (a dict)
@@ -309,23 +323,17 @@ def close_main(dict_algorithm, dict_material, dict_sample, dict_sollicitation, d
         Output :
             Nothing but the dictionnaries and the report are updated
     '''
-    #make movie of the different configuration
-    if 'Movie' in dict_algorithm['L_flag_plot'] and 'Config' in dict_algorithm['L_flag_plot']:
-        Owntools.Plot.Plot_mp4('Debug/Configuration/Configuration_','Debug/Configuration.mp4')
-    #make movie of the init-current shape
-    if 'Movie' in dict_algorithm['L_flag_plot'] and 'Init_Current_Shape' in dict_algorithm['L_flag_plot']:
-        Owntools.Plot.Plot_mp4('Debug/Comparison_Init_Current/Init_Current_Shape_','Debug/Init_Current_Shape.mp4')
 
     simulation_report.end()
 
     #final save
     if dict_algorithm['SaveData']:
 
-        Owntools.Save.save_dicts_final(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
+        Owntools.Save.save_dicts('Dicts/save_final', dict_algorithm, dict_geometry, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
+        os.remove('Dicts/save_tempo')
         name_actual_folder = os.path.dirname(os.path.realpath(__file__))
         shutil.copytree(name_actual_folder, '../'+dict_algorithm['foldername']+'/'+dict_algorithm['namefile'])
         os.remove('../'+dict_algorithm['foldername']+'/User_'+dict_algorithm['namefile']+'_tempo.txt')
-        os.remove('../'+dict_algorithm['foldername']+'/Report_'+dict_algorithm['namefile']+'_tempo.txt')
 
 #-------------------------------------------------------------------------------
 
@@ -338,15 +346,15 @@ if '__main__' == __name__:
     #trackers
     Owntools.Compute.Compute_mass(dict_sample)
     Owntools.Compute.Compute_compacity(dict_sample)
+    Owntools.Compute.Compute_k0(dict_sample)
     dict_tracker = {
     'L_mass' : [dict_sample['grains_mass']],
     'L_mass_dissolved' : [0],
     'L_z_box_max' : [dict_sample['z_box_max']],
     'L_compacity' : [dict_sample['compacity']],
-    'L_k0' : [] # add initial k0
+    'L_k0' : [dict_sample['k0']]
     }
 
     main_simulation(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
 
-    if False :
-        close_main(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
+    close_main(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
