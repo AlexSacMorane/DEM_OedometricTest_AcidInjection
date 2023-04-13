@@ -74,7 +74,7 @@ def Control_z_max_NR(dict_sample, dict_sollicitation):
     overlap_L = []
     k_L = []
     for contact in dict_sample['L_contact_gw']:
-        if contact.nature == 'gwy_max':
+        if contact.nature == 'gwz_max':
             F = F + contact.Fwg_n
             overlap_L.append(contact.overlap)
             k_L.append(contact.k)
