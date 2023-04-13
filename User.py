@@ -70,7 +70,7 @@ def All_parameters():
     Y = 70*(10**9)*(10**6)*(10**(-12)) #Young Modulus µN/µm2
     nu = 0.3 #Poisson's ratio
     rho = 2500*10**(-6*3) #density kg/µm3
-    mu_friction_gg = 0.5 #grain-grain
+    mu_friction_gg = 0 #grain-grain
     mu_friction_gw = 0 #grain-wall
     coeff_restitution = 0.2 #1 is perfect elastic
 
@@ -94,14 +94,14 @@ def All_parameters():
     dt_DEM_crit = math.pi*R_50/(0.16*nu+0.88)*math.sqrt(rho*(2+2*nu)/Y) #s critical time step from O'Sullivan 2011
     dt_DEM = dt_DEM_crit/7 #s time step during DEM simulation
     factor_neighborhood = 1.5 #margin to detect a grain into a neighborhood
-    i_update_neighborhoods = 500 #the frequency of the update of the neighborhood of the grains and the walls
+    i_update_neighborhoods = 50 #the frequency of the update of the neighborhood of the grains and the walls
     #Stop criteria of the DEM
     i_DEM_stop = 4000 #maximum iteration for one DEM simulation
-    Ecin_ratio = 0.0005
+    Ecin_ratio = 0.001
 
     #List of plot to do
     Debug_DEM = True #plot configuration
-    i_print_plot = 300 #frenquency of the print and plot (if Debug_DEM) in DEM step
+    i_print_plot = 50 #frenquency of the print and plot (if Debug_DEM) in DEM step
 
     #Save the simulation
     SaveData = False #Save data or not
@@ -138,7 +138,7 @@ def All_parameters():
     gravity = 0
     Vertical_Confinement_Linear_Force = Y*2*R_50/100 #µN/µm used to compute the Vertical_Confinement_Force
     Vertical_Confinement_Force = Vertical_Confinement_Linear_Force*(D_oedo) #µN
-    f_R50_0_dissolved = 0.005 #fraction of the initial mean radius dissolved
+    f_R50_0_dissolved = 0.001 #fraction of the initial mean radius dissolved
 
     dict_sollicitation = {
     'gravity' : gravity,
