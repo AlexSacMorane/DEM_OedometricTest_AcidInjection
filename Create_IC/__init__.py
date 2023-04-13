@@ -239,7 +239,7 @@ def Create_grains(dict_ic, dict_geometry, dict_sample, dict_material, simulation
     for L_g_tempo in dict_ic['L_L_g_tempo']:
         n_created = n_created + len(L_g_tempo)
 
-    for i in range(n_created, int(dict_geometry['N_grain']*dict_ic['i_generation']/dict_ic['n_generation'])):
+    for i in range(n_created, int(dict_geometry['N_grain']*dict_ic['i_generation']/dict_ic['n_generation'])+1):
         radius = np.random.normal(dict_geometry['R_50'], dict_geometry['sigma_psd'])
         i_test = 0
         grain_created = False
