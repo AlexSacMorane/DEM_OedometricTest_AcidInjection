@@ -54,7 +54,7 @@ def error_on_zmax_df(dz,overlap_L,k_L) :
 
 #-------------------------------------------------------------------------------
 
-def Control_z_max_NR(dict_sample,dict_sollicitation):
+def Control_z_max_NR(dict_sample, dict_sollicitation):
     """
     Control the upper wall to apply force.
 
