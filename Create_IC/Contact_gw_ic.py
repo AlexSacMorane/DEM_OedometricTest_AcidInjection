@@ -211,7 +211,7 @@ def Grains_Wall_contact_Neighborhood(wall_neighborhood, d_oedo, z_box_min, z_box
   """
   Detect contact grain in the neighborhood of the wall and the wall.
 
-  The neighbourood is updated with Update_wall_Neighborhoods(). An iteration over the grains in the wall neighborhood is done. A comparison is done with the coordinates of the wall to determine if there is a contact.
+  The neighborhood is updated with Update_wall_Neighborhoods(). An iteration over the grains in the wall neighborhood is done. A comparison is done with the coordinates of the wall to determine if there is a contact.
 
         Input :
             a walls neighborhood (a list)

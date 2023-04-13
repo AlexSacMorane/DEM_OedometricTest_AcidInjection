@@ -193,7 +193,7 @@ def Update_Neighborhoods(dict_ic):
         for j_grain in range(i_grain+1,len(dict_ic['L_g_tempo'])):
             if np.linalg.norm(dict_ic['L_g_tempo'][i_grain].center-dict_ic['L_g_tempo'][j_grain].center) < dict_ic['factor_neighborhood_IC']*(dict_ic['L_g_tempo'][i_grain].radius+dict_ic['L_g_tempo'][j_grain].radius):
                 neighborhood.append(dict_ic['L_g_tempo'][j_grain])
-        dict_ic['L_g_tempo'][i_grain].neighbourood = neighborhood
+        dict_ic['L_g_tempo'][i_grain].neighborhood = neighborhood
 
 
 #-------------------------------------------------------------------------------
@@ -212,7 +212,7 @@ def Grains_contact_Neighborhoods(dict_ic,dict_material):
     """
     for i_grain in range(len(dict_ic['L_g_tempo'])-1) :
         grain_i = dict_ic['L_g_tempo'][i_grain]
-        for neighbor in dict_ic['L_g_tempo'][i_grain].neighbourood:
+        for neighbor in dict_ic['L_g_tempo'][i_grain].neighborhood:
             j_grain = neighbor.id
             grain_j = neighbor
             if Grains_contact_f(grain_i,grain_j):
