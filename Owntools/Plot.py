@@ -14,7 +14,6 @@ from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
 import os
-from Owntools import index_to_str
 
 #-------------------------------------------------------------------------------
 
