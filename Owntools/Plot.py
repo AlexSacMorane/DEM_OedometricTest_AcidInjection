@@ -37,72 +37,76 @@ def Plot_PSD(namefile, dict_sample):
 
 #-------------------------------------------------------------------------------
 
-def Plot_DEM_tracker(dict_tracker):
-    '''
-    Plot the trackers of the DEM step.
+def Plot_mass(namefile, dict_tracker):
+    """
+    Plot the evolution of the mass distribution.
 
-        Input :
+        Intput :
+            a file name (a str)
             a tracker dictionnary (a dict)
         Output :
-            Nothing but a .png file is generated (file)
-    '''
-    #look for the name of the new plot
-    template_name = 'Debug/DEM_tracker/PFDEM_'
-    j = 1
-    plotpath = Path(template_name+str(j)+'.png')
-    while plotpath.exists():
-        j = j + 1
-        plotpath = Path(template_name+str(j)+'.png')
-    name = template_name+str(j)+'.png'
-
-
+            Nothing, but a png file is generated (a file)
+    """
     plt.figure(1,figsize=(16,9))
-
-    plt.subplot(221)
-    plt.plot(dict_tracker['Ecin'])
-    plt.title('Kinetic energy')
-
-    plt.subplot(222)
-    plt.plot(dict_tracker['y_box_max_DEM'])
-    plt.title('Upper wall position')
-
-    plt.subplot(223)
-    plt.plot(dict_tracker['Force_on_upper_wall'])
-    plt.title('Force on the upper wall')
-
-    plt.savefig(name)
+    plt.plot(dict_tracker['L_mass'], label ='Grains mass')
+    plt.plot(dict_tracker['L_mass_dissolved'], label ='Mass dissolved')
+    plt.xlabel('Dissolution iteration (-)')
+    plt.ylabel('Mass (kg)')
+    plt.legend()
+    plt.savefig(namefile)
     plt.close(1)
 
 #-------------------------------------------------------------------------------
 
-def Plot_yboxmax(dict_tracker):
-    '''
-    Plot the evolution of the upper wall position.
+def Plot_custom(namefile, L_data_x, L_data_y, L_label_name, L_label):
+    """
+    Plot a custom curve.
 
-        Input :
-            a tracker dictionnary (a dict)
+        Intput :
+            a file name (a str)
+            a list of data x (a list)
+            a list of data y (a list)
+            a list of label (a list)
+            a list of label (a list)
         Output :
-            Nothing but a .png file is generated (file)
-    '''
+            Nothing, but a png file is generated (a file)
+    """
     plt.figure(1,figsize=(16,9))
-    plt.plot(dict_tracker['L_t'], dict_tracker['L_y_box_max'], marker ='x')
-    plt.title('Upper wall position')
-    plt.savefig('Debug/Evolution_yboxmax.png')
+    plt.plot(L_data_x, L_data_y)
+    if 'title' in L_label_name:
+        plt.title(L_label[L_label_name.index('title')])
+    if 'xlabel' in L_label_name:
+        plt.xlabel(L_label[L_label_name.index('xlabel')])
+    if 'ylabel' in L_label_name:
+        plt.ylabel(L_label[L_label_name.index('ylabel')])
+    plt.savefig(namefile)
     plt.close(1)
 
 #-------------------------------------------------------------------------------
 
-def Plot_porosity(dict_tracker):
-    '''
-    Plot the evolution of the sample porosity (= grain surface / box surface).
+def Plot_DEM_trackers(namefile, Force_tracker, Ecin_tracker, Zmax_tracker):
+    """
+    Plot trackers from DEM during loading.
 
         Input :
-            a tracker dictionnary (a dict)
+            a namefile (a str)
+            three list of tracker (lists)
         Output :
-            Nothing but a .png file is generated (file)
-    '''
+            Nothing, but a .png file is generated (a file)
+    """
     plt.figure(1,figsize=(16,9))
-    plt.plot(dict_tracker['L_t'], dict_tracker['L_porosity'], marker ='x')
-    plt.title('Evolution of the sample porosity')
-    plt.savefig('Debug/Evolution_porosity.png')
+
+    plt.subplot(131)
+    plt.title('Force applied on particles (µN)')
+    plt.plot(Force_tracker)
+
+    plt.subplot(132)
+    plt.title('Kinetic energy of particles (10-12 J)')
+    plt.plot(Ecin_tracker)
+
+    plt.subplot(133)
+    plt.title('Upper wall position (µm)')
+    plt.plot(Zmax_tracker)
+
+    plt.savefig(namefile)
     plt.close(1)
