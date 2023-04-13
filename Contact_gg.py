@@ -144,7 +144,7 @@ class Contact_gg:
         G_eq = 1/((1-self.g1.nu)/self.g1.g+(1-self.g2.nu)/self.g2.g)
         R_eq = 1/(1/self.g1.radius+1/self.g2.radius)
         kt0 = 8 * G_eq *math.sqrt(R_eq*abs(self.overlap_normal))
-        kt = kt0*math.sqrt(max(1-2/3*kt0*abs(self.overlap_tangential)/self.mu/abs(self.F_2_1_n),0)) #not linear spring
+        kt = kt0*math.sqrt(max(1-2/3*kt0*np.linalg.norm(self.overlap_tangential)/self.mu/abs(self.F_2_1_n),0)) #not linear spring
 
         #damping law
         gamma = -math.log(self.coeff_restitution)/math.sqrt(math.pi**2+math.log(self.coeff_restitution)**2)
