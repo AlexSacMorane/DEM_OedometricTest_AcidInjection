@@ -56,7 +56,7 @@ def All_parameters():
 
     #Box définition
     z_box_min = 0 #µm
-    D_oedo = (dict_geometry['N_grain']*20)**(1/3)*dict_geometry['R_50'] #µm the diameter of the oedometer
+    D_oedo = (dict_geometry['N_grain']*15)**(1/3)*dict_geometry['R_50'] #µm the diameter of the oedometer
 
     dict_sample = {
     'z_box_min' : z_box_min,
