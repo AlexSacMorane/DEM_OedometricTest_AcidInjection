@@ -93,6 +93,7 @@ def LG_tempo(dict_geometry, dict_ic, dict_material, dict_sample, dict_sollicitat
     DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollicitation, simulation_report)
 
     simulation_report.write_and_print(str(len(dict_ic['L_g_tempo']))+' / '+str(dict_geometry['N_grain'])+' grains have been created\n','\n'+str(len(dict_ic['L_g_tempo']))+' / '+str(dict_geometry['N_grain'])+' grains have been created\n')
+    simulation_report.write_and_print('H/D = '+str(round((dict_sample['z_box_max']-dict_sample['z_box_min'])/dict_sample['D_oedo'],2))+'\n','H/D = '+str(round((dict_sample['z_box_max']-dict_sample['z_box_min'])/dict_sample['D_oedo'],2))+'\n')
 
 #-------------------------------------------------------------------------------
 
@@ -195,9 +196,9 @@ def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollici
 
         if dict_ic['i_DEM_IC'] % dict_ic['i_print_plot_IC'] ==0:
             if dict_sollicitation['gravity'] > 0 :
-                print('i_DEM',dict_ic['i_DEM_IC'],'and Ecin',int(100*Ecin/Ecin_stop),'% and Force',int(100*F/Force_stop),'% and Confinement',int(100*Fv/dict_sollicitation['Vertical_Confinement_Force']),'%')
+                print('i_DEM',str(dict_ic['i_DEM_IC'])+'/'+str(dict_ic['i_DEM_stop_IC']+i_DEM_0),'and Ecin',int(100*Ecin/Ecin_stop),'% and Force',int(100*F/Force_stop),'% and Confinement',int(100*Fv/dict_sollicitation['Vertical_Confinement_Force']),'%')
             else :
-                print('i_DEM',dict_ic['i_DEM_IC'],'and Ecin',int(100*Ecin/Ecin_stop),'% and Confinement',int(100*Fv/dict_sollicitation['Vertical_Confinement_Force']),'%')
+                print('i_DEM',str(dict_ic['i_DEM_IC'])+'/'+str(dict_ic['i_DEM_stop_IC']+i_DEM_0),'and Ecin',int(100*Ecin/Ecin_stop),'% and Confinement',int(100*Fv/dict_sollicitation['Vertical_Confinement_Force']),'%')
             if dict_ic['Debug_DEM'] :
                 Owntools.Write.Write_vtk('Debug/Configuration/Init/configuration_'+str(dict_ic['i_DEM_IC'])+'.vtk', dict_ic['L_g_tempo'])
 
