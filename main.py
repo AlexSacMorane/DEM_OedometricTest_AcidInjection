@@ -260,7 +260,7 @@ def DEM_loading(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_
             #for the moment it is not done
 
         #Control the z_max to have the pressure target
-        Reset, result, Fv = Control_z_max_NR(dict_sample['z_box_max'], dict_sollicitation['Vertical_Confinement_Force'], dict_sample['L_contact_gw'], dict_sample['L_g'])
+        Reset, result, Fv = Owntools.Control_z_max_NR(dict_sample['z_box_max'], dict_sollicitation['Vertical_Confinement_Force'], dict_sample['L_contact_gw'], dict_sample['L_g'])
         if Reset :
             dict_sample['z_box_max'] = result
         else :
