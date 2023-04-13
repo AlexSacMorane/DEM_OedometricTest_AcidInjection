@@ -86,6 +86,10 @@ def All_parameters():
     #---------------------------------------------------------------------------
     #Algorithm parameters
 
+    #stop criteria
+    n_dissolution = 2 #number of dissolution increment
+    f_mass0_dissolved_mas = 0.5 #maximum of the initial mass dissolved
+
     #DEM parameters
     dt_DEM_crit = math.pi*R_50/(0.16*nu+0.88)*math.sqrt(rho*(2+2*nu)/Y) #s critical time step from O'Sullivan 2011
     dt_DEM = dt_DEM_crit/8 #s time step during DEM simulation
@@ -119,6 +123,8 @@ def All_parameters():
         namefile = template
 
     dict_algorithm = {
+    'n_dissolution' : n_dissolution,
+    'f_mass0_dissolved_mas' : f_mass0_dissolved_mas,
     'Debug' : Debug,
     'Debug_DEM' : Debug_DEM,
     'i_print_plot' : i_print_plot,
@@ -141,10 +147,12 @@ def All_parameters():
     gravity = 0
     Vertical_Confinement_Linear_Force = Y*2*R_50/100 #µN/µm used to compute the Vertical_Confinement_Force
     Vertical_Confinement_Force = Vertical_Confinement_Linear_Force*(D_oedo) #µN
+    f_R50_0_dissolved = 0.005 #fraction of the initial mean radius dissolved
 
     dict_sollicitation = {
     'gravity' : gravity,
-    'Vertical_Confinement_Force' : Vertical_Confinement_Force
+    'Vertical_Confinement_Force' : Vertical_Confinement_Force,
+    'f_R50_0_dissolved' : f_R50_0_dissolved
     }
 
     #---------------------------------------------------------------------------
@@ -183,7 +191,7 @@ def All_parameters():
 
 #-------------------------------------------------------------------------------
 
-def Criteria_StopSimulation(dict_algorithm):
+def Criteria_StopSimulation(dict_algorithm, dict_tracker):
     '''
     Define a stop criteria for the PFDEM simulation.
 
@@ -191,10 +199,13 @@ def Criteria_StopSimulation(dict_algorithm):
 
         Input :
             an algorithm dictionnary (a dictionnary)
+            a tracker dictionnary (a dictionnary)
         Output :
             The result depends on the fact if the stop criteria is reached or not (a bool)
     '''
     Criteria_Verified = False
-    if dict_algorithm['i_PFDEM'] >= dict_algorithm['n_t_PFDEM']:
+    if dict_algorithm['i_dissolution'] >= dict_algorithm['n_dissolution']:
+        Criteria_Verified = True
+    if dict_tracker['L_mass_dissolved'][-1]/dict_tracker['L_mass'][0] >= dict_algorithm['f_mass0_dissolved_mas']:
         Criteria_Verified = True
     return Criteria_Verified
