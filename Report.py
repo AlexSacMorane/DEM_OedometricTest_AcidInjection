@@ -139,8 +139,9 @@ class Report:
         dt = dt % 60
 
         file_to_write = open(self.name,'a')
-        file_to_write.write_and_print('\nTime spent during "'+Step_name+'" : '+str(dt_day)+' days '+str(dt_hour)+' hours '+str(dt_min)+' min '+str(dt)+' sec\n\n','\nTime spent during "'+Step_name+'" : '+str(dt_day)+' days '+str(dt_hour)+' hours '+str(dt_min)+' min '+str(dt)+' sec\n')
+        file_to_write.write('\nTime spent during "'+Step_name+'" : '+str(dt_day)+' days '+str(dt_hour)+' hours '+str(dt_min)+' min '+str(dt)+' sec\n\n')
         file_to_write.close()
+        print('\nTime spent during "'+Step_name+'" : '+str(dt_day)+' days '+str(dt_hour)+' hours '+str(dt_min)+' min '+str(dt)+' sec\n')
 
 #-------------------------------------------------------------------------------
 
@@ -174,7 +175,8 @@ class Report:
 
      file_to_write = open(self.name,'a')
      file_to_write.write('\n'+'Simulation ended '+str(datetime.now())[:19]+'\n')
-     file_to_write.write_and_print('\nTime spent : '+str(dt_day)+' days '+str(dt_hour)+' hours '+str(dt_min)+' min '+str(dt)+' sec\n','\nTime spent : '+str(dt_day)+' days '+str(dt_hour)+' hours '+str(dt_min)+' min '+str(dt)+' sec')
+     file_to_write.write('\nTime spent : '+str(dt_day)+' days '+str(dt_hour)+' hours '+str(dt_min)+' min '+str(dt)+' sec\n')
      file_to_write.close()
+     print('\nTime spent : '+str(dt_day)+' days '+str(dt_hour)+' hours '+str(dt_min)+' min '+str(dt)+' sec')
 
  #-------------------------------------------------------------------------------
