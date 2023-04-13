@@ -69,17 +69,13 @@ if name_to_load == 'Dicts/save_ic' :
     dict_tracker = {
     'L_mass' : [dict_sample['grains_mass']],
     'L_mass_dissolved' : [0],
+    'L_perc_mass_dissolved' : [0],
     'L_z_box_max' : [dict_sample['z_box_max']],
+    'L_eps_v' : [0],
     'L_compacity' : [dict_sample['compacity']],
     'L_k0' : [dict_sample['k0']]
     }
 
 main.main_simulation(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
-close_main(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
 
-
-#-------------------------------------------------------------------------------
-#close simulation
-#-------------------------------------------------------------------------------
-
-main.close_main(dict_algorithm, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
+main.close_main(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
