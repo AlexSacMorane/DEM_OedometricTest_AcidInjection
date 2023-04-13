@@ -154,10 +154,17 @@ def main_simulation(dict_algorithm, dict_geometry, dict_material, dict_sample, d
 
         #tracker
         dict_tracker['L_z_box_max'].append(dict_sample['z_box_max'])
+        dict_tracker['L_eps_v'].append(100*(dict_tracker['L_z_box_max'][0]-dict_tracker['L_z_box_max'][-1])/dict_tracker['L_z_box_max'][0])
         Owntools.Compute.Compute_compacity(dict_sample)
         dict_tracker['L_compacity'].append(dict_sample['compacity'])
         Owntools.Compute.Compute_k0(dict_sample)
         dict_tracker['L_k0'].append(dict_sample['k0'])
+
+        #Plot
+        Owntools.Plot.Plot_mass('Debug/Mass_distribution.png', dict_tracker)
+        Owntools.Plot.Plot_custom('Debug/k0_perc_mass_dissolved.png', dict_tracker['L_perc_mass_dissolved'], dict_tracker['L_k0'], ['xlabel', 'ylabel'], ['Percentage of mass dissolved (%)', 'k0 = sII/sI (-)'])
+        Owntools.Plot.Plot_custom('Debug/compacity_perc_mass_dissolved.png', dict_tracker['L_perc_mass_dissolved'], dict_tracker['L_compacity'], ['xlabel', 'ylabel'], ['Percentage of mass dissolved (%)', 'compacity = Vg/Vb (-)'])
+        Owntools.Plot.Plot_custom('Debug/eps_v_perc_mass_dissolved.png', dict_tracker['L_perc_mass_dissolved'], dict_tracker['L_eps_v'], ['xlabel', 'ylabel'], ['Percentage of mass dissolved (%)', 'Vertical strain (%)'])
 
         #save
         Owntools.Save.save_dicts('Dicts/save_tempo', dict_algorithm, dict_geometry, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
@@ -199,6 +206,7 @@ def dissolve_material(dict_geometry, dict_sample, dict_sollicitation, dict_track
     Owntools.Compute.Compute_mass(dict_sample)
     dict_tracker['L_mass'].append(dict_sample['grains_mass'])
     dict_tracker['L_mass_dissolved'].append(dict_tracker['L_mass_dissolved'][-1] + (dict_tracker['L_mass'][-2]-dict_tracker['L_mass'][-1]))
+    dict_tracker['L_perc_mass_dissolved'].append(dict_tracker['L_mass_dissolved'][-1]/dict_tracker['L_mass'][0]*100)
 
 #-------------------------------------------------------------------------------
 
@@ -289,6 +297,7 @@ def DEM_loading(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_
             else :
                 print('i_DEM',str(dict_algorithm['i_DEM'])+'/'+str(dict_algorithm['i_DEM_stop']+i_DEM_0),'and Ecin',int(100*Ecin/Ecin_stop),'% and Confinement',int(100*dict_sollicitation['Force_on_upper_wall']/dict_sollicitation['Vertical_Confinement_Force']),'%')
             if dict_algorithm['Debug_DEM'] :
+                Owntools.Plot.Plot_DEM_trackers('Debug/Configuration/DEM_trackers_'+str(dict_algorithm['i_dissolution'])+'.png', Force_tracker, Ecin_tracker, Zmax_tracker)
                 Owntools.Write.Write_vtk('Debug/Configuration/Main/configuration_'+str(dict_algorithm['i_DEM'])+'.vtk', dict_sample['L_g'])
 
         #Check stop conditions for DEM
@@ -347,7 +356,9 @@ if '__main__' == __name__:
     dict_tracker = {
     'L_mass' : [dict_sample['grains_mass']],
     'L_mass_dissolved' : [0],
+    'L_perc_mass_dissolved' : [0],
     'L_z_box_max' : [dict_sample['z_box_max']],
+    'L_eps_v' : [0],
     'L_compacity' : [dict_sample['compacity']],
     'L_k0' : [dict_sample['k0']]
     }
