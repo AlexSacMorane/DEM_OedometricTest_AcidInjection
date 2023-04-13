@@ -45,7 +45,7 @@ def Compute_PSD(dict_sample):
         L_mass.pop(i_r_min)
 
     #update dictionnaries
-    dict_sample['L_radius'] = L_radius
+    dict_sample['L_radius'] = L_radius_sorted
     dict_sample['L_cumulative_mass'] = L_cumulative_mass
 
 #-------------------------------------------------------------------------------
