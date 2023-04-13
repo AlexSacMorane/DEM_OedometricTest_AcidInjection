@@ -68,3 +68,51 @@ def Compute_compacity(dict_sample):
     dict_sample['compacity'] = Vg/Vb
 
 #-------------------------------------------------------------------------------
+
+def Compute_mass(dict_sample):
+    '''
+    Compute the grain mass.
+
+        Input :
+            a sample dictionnary (a dict)
+        Output :
+            Nothing but the dictionnary gets an updated value for the mass (a float)
+    '''
+    Mg = 0
+    for grain in dict_sample['L_g']:
+        Mg = Mg + grain.mass
+
+    #update element in dict
+    dict_sample['grains_mass'] = Mg
+
+#-------------------------------------------------------------------------------
+
+def Compute_F_total(L_g):
+    """
+    Compute total force applied on grains in the sample.
+
+        Input :
+            a list of grains (a list)
+        Output :
+            the total force applied (a float)
+    """
+    F = 0
+    for grain in L_g:
+        F = F + np.linalg.norm([grain.fx, grain.fy, grain.fz])
+    return F
+
+#-------------------------------------------------------------------------------
+
+def Compute_E_cin_total(L_g):
+    """
+    Compute total kinetic energy.
+
+        Input :
+            a list of grains (a list)
+        Output :
+            the total kinetic energy (a float)
+    """
+    Ecin = 0
+    for grain in L_g:
+        Ecin = Ecin + 1/2*grain.mass*np.dot(grain.v,grain.v)
+    return Ecin
