@@ -92,8 +92,8 @@ def LG_tempo(dict_geometry, dict_ic, dict_material, dict_sample, dict_sollicitat
 
     DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollicitation, simulation_report)
 
-    simulation_report.write_and_print(str(len(dict_ic['L_g_tempo']))+' / '+str(dict_geometry['N_grain'])+' grains have been created\n','\n'+str(len(dict_ic['L_g_tempo']))+' / '+str(dict_geometry['N_grain'])+' grains have been created\n')
-    simulation_report.write_and_print('H/D = '+str(round((dict_sample['z_box_max']-dict_sample['z_box_min'])/dict_sample['D_oedo'],2))+'\n','H/D = '+str(round((dict_sample['z_box_max']-dict_sample['z_box_min'])/dict_sample['D_oedo'],2))+'\n')
+    simulation_report.write_and_print(str(len(dict_ic['L_g_tempo']))+' / '+str(dict_geometry['N_grain'])+' grains have been created\n','\n'+str(len(dict_ic['L_g_tempo']))+' / '+str(dict_geometry['N_grain'])+' grains have been created')
+    simulation_report.write_and_print('H/D = '+str(round((dict_sample['z_box_max']-dict_sample['z_box_min'])/dict_sample['D_oedo'],2))+'\n','H/D = '+str(round((dict_sample['z_box_max']-dict_sample['z_box_min'])/dict_sample['D_oedo'],2)))
 
 #-------------------------------------------------------------------------------
 
