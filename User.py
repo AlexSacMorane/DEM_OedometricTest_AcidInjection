@@ -56,7 +56,7 @@ def All_parameters():
 
     #Box définition
     z_box_min = 0 #µm
-    D_oedo = (dict_geometry['N_grain']*11)**(1/3)*dict_geometry['R_50'] #µm the diameter of the oedometer
+    D_oedo = (dict_geometry['N_grain']*20)**(1/3)*dict_geometry['R_50'] #µm the diameter of the oedometer
 
     dict_sample = {
     'z_box_min' : z_box_min,
@@ -156,7 +156,7 @@ def All_parameters():
     i_DEM_stop_IC = 3000 #stop criteria for DEM during IC
     Debug_DEM_IC = True #plot configuration inside DEM during IC
     i_print_plot_IC = 300 #frenquency of the print and plot (if Debug_DEM_IC) for IC
-    dt_DEM_IC = dt_DEM_crit/6 #s time step during IC
+    dt_DEM_IC = dt_DEM_crit/5 #s time step during IC
     Ecin_ratio_IC = 0.001
     factor_neighborhood_IC = 1.5 #margin to detect a grain into a neighborhood
     i_update_neighborhoods_gen = 50 #the frequency of the update of the neighborhood of the grains and the walls during IC generations
