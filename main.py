@@ -105,10 +105,11 @@ def create_ic(dict_geometry, dict_ic, dict_material, dict_sample, dict_sollicita
     Owntools.Compute.Compute_PSD(dict_sample)
     Owntools.Plot.Plot_PSD('Debug/PSD.png', dict_sample)
 
+    simulation_report.tac_tempo('Initialisation')
+
     #save data
     Owntools.Save.save_dicts_ic('Dicts/save_ic', dict_algorithm, dict_geometry, dict_ic, dict_material, dict_sample, dict_sollicitation, simulation_report)
 
-    simulation_report.tac_tempo('Initialisation')
 
 #-------------------------------------------------------------------------------
 
@@ -140,7 +141,7 @@ def main_simulation(dict_algorithm, dict_geometry, dict_material, dict_sample, d
     dict_sample['id_contact'] = 0
 
     while not User.Criteria_StopSimulation(dict_algorithm, dict_tracker):
-        simulation_report.tic()
+        simulation_report.tic_tempo()
         dict_algorithm['i_dissolution'] = dict_algorithm['i_dissolution'] + 1
 
         #dissolve material
@@ -161,7 +162,7 @@ def main_simulation(dict_algorithm, dict_geometry, dict_material, dict_sample, d
         #save
         Owntools.Save.save_dicts('Dicts/save_tempo', dict_algorithm, dict_geometry, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
 
-        simulation_report.tac('Dissolution step '+str(dict_algorithm['i_dissolution']))
+        simulation_report.tac_tempo('Dissolution step '+str(dict_algorithm['i_dissolution']))
 
 #-------------------------------------------------------------------------------
 
@@ -186,7 +187,7 @@ def dissolve_material(dict_geometry, dict_sample, dict_sollicitation, dict_track
             #update properties
             grain.volume = 4/3*math.pi*grain.radius**3
             grain.mass = grain.rho*grain.volume
-            self.inertia = 2/5*self.mass*grain.radius**2
+            grain.inertia = 2/5*grain.mass*grain.radius**2
         else : #no grain anymore
             grain.radius = grain.radius + dict_geometry['R_50']*dict_sollicitation['f_R50_0_dissolved']
             #if grain is deleted, be carefull with :
@@ -197,7 +198,7 @@ def dissolve_material(dict_geometry, dict_sample, dict_sollicitation, dict_track
     #compute mass
     Owntools.Compute.Compute_mass(dict_sample)
     dict_tracker['L_mass'].append(dict_sample['grains_mass'])
-    dict_tracker['L_mass_dissolved'].append(dict_tracker['L_mass_dissolved'][-1] + (dict_sample['L_mass'][-2]-dict_sample['L_mass'][-1]))
+    dict_tracker['L_mass_dissolved'].append(dict_tracker['L_mass_dissolved'][-1] + (dict_tracker['L_mass'][-2]-dict_tracker['L_mass'][-1]))
 
 #-------------------------------------------------------------------------------
 
@@ -273,11 +274,7 @@ def DEM_loading(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_
             #for the moment it is not done
 
         #Control the z_max to have the pressure target
-        Reset, result, Fv = Owntools.Control_z_max_NR(dict_sample['z_box_max'], dict_sollicitation['Vertical_Confinement_Force'], dict_sample['L_contact_gw'], dict_sample['L_g'])
-        if Reset :
-            dict_sample['z_box_max'] = result
-        else :
-            dict_sample['z_box_max'] = dict_sample['z_box_max'] + result
+        Owntools.Control_z_max_NR(dict_sample, dict_sollicitation)
 
         #Tracker
         F = Owntools.Compute.Compute_F_total(dict_sample['L_g'])
@@ -298,10 +295,10 @@ def DEM_loading(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_
         if dict_algorithm['i_DEM'] >= dict_algorithm['i_DEM_stop'] + i_DEM_0:
              DEM_loop_statut = False
         if dict_sollicitation['gravity'] > 0:
-            if Ecin < Ecin_stop and F < Force_stop and (0.95*dict_sollicitation['Vertical_Confinement_Force']<Fv and Fv<1.05*dict_sollicitation['Vertical_Confinement_Force']):
-                  DEM_loop_statut = False
+            if Ecin < Ecin_stop and F < Force_stop and (0.95*dict_sollicitation['Vertical_Confinement_Force']<dict_sollicitation['Force_on_upper_wall'] and dict_sollicitation['Force_on_upper_wall']<1.05*dict_sollicitation['Vertical_Confinement_Force']):
+                DEM_loop_statut = False
         else:
-            if Ecin < Ecin_stop and dict_algorithm['i_DEM'] >= dict_algorithm['i_DEM_stop']*0.1 + i_DEM_0 and (0.95*dict_sollicitation['Vertical_Confinement_Force']<Fv and Fv<1.05*dict_sollicitation['Vertical_Confinement_Force']):
+            if Ecin < Ecin_stop and dict_algorithm['i_DEM'] >= dict_algorithm['i_DEM_stop']*0.1 + i_DEM_0 and (0.95*dict_sollicitation['Vertical_Confinement_Force']<dict_sollicitation['Force_on_upper_wall'] and dict_sollicitation['Force_on_upper_wall']<1.05*dict_sollicitation['Vertical_Confinement_Force']):
                 DEM_loop_statut = False
         if dict_sample['L_g'] == []:
             DEM_loop_statut = False
@@ -346,7 +343,7 @@ if '__main__' == __name__:
     #trackers
     Owntools.Compute.Compute_mass(dict_sample)
     Owntools.Compute.Compute_compacity(dict_sample)
-    Owntools.Compute.Compute_k0(dict_sample)
+    Owntools.Compute.Compute_k0_ic(dict_ic, dict_sample)
     dict_tracker = {
     'L_mass' : [dict_sample['grains_mass']],
     'L_mass_dissolved' : [0],
