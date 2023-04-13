@@ -36,7 +36,7 @@ def All_parameters():
     #---------------------------------------------------------------------------
     #Geometry parameters
 
-    N_grain = 500 #total number of grains
+    N_grain = 800 #total number of grains
 
     #a normal law is assumed for the PSD
     R_50 = 350 #µm expectation
@@ -56,7 +56,7 @@ def All_parameters():
 
     #Box définition
     z_box_min = 0 #µm
-    D_oedo = (dict_geometry['N_grain']*15)**(1/3)*dict_geometry['R_50'] #µm the diameter of the oedometer
+    D_oedo = (dict_geometry['N_grain']*14)**(1/3)*dict_geometry['R_50'] #µm the diameter of the oedometer
 
     dict_sample = {
     'z_box_min' : z_box_min,
@@ -71,7 +71,7 @@ def All_parameters():
     nu = 0.3 #Poisson's ratio
     rho = 2500*10**(-6*3) #density kg/µm3
     mu_friction_gg = 0.5 #grain-grain
-    mu_friction_gw = 0.5 #grain-wall
+    mu_friction_gw = 0 #grain-wall
     coeff_restitution = 0.2 #1 is perfect elastic
 
     dict_material = {
