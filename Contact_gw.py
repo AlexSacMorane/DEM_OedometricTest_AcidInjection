@@ -257,7 +257,7 @@ def Grains_Wall_contact_Neighborhood(wall_neighborhood, dict_material, dict_samp
   #load data needed
   L_ij_contact_gw = dict_sample['L_contact_gw_ij']
   L_contact_gw = dict_sample['L_contact_gw']
-  id_contact = dict_sample['id_contact']
+  id_contact = dict_sample['id_contact_gw']
   d_oedo = dict_sample['D_oedo']
   z_box_min = dict_sample['z_box_min']
   z_box_max = dict_sample['z_box_max']
@@ -318,4 +318,4 @@ def Grains_Wall_contact_Neighborhood(wall_neighborhood, dict_material, dict_samp
       #Update dict
       dict_ic['L_contact_gw_ij'] = L_ij_contact_gw
       dict_ic['L_contact_gw'] = L_contact_gw
-      dict_ic['id_contact'] = id_contact
+      dict_ic['id_contact_gw'] = id_contact
