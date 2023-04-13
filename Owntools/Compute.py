@@ -87,6 +87,35 @@ def Compute_mass(dict_sample):
 
 #-------------------------------------------------------------------------------
 
+def Compute_k0_ic(dict_ic, dict_sample):
+    '''
+    Compute the k0 = sigma_II/sigma_I for initial step.
+
+        Input :
+            an initial condition dictionnary (a dict)
+            a sample dictionnary (a dict)
+        Output :
+            Nothing but the dictionnary gets an updated value for the k0 (a float)
+    '''
+    #compute force
+    F_lat = 0
+    F_top = 0
+    for contact in dict_ic['L_contact_gw']:
+        if contact.nature == 'gwlat':
+            F_lat = F_lat + contact.Fwg_n
+        elif contact.nature == 'gwz_max':
+            F_top = F_top + contact.Fwg_n
+
+    #compute surface
+    S_top = math.pi*dict_sample['D_oedo']**2/4
+    S_lat = math.pi*dict_sample['D_oedo']*(dict_sample['z_box_max']-dict_sample['z_box_min'])
+
+    #compute k0 and update element in dict
+    k0 = (F_lat/S_lat)/(F_top/S_top)
+    dict_sample['k0'] = k0
+
+#-------------------------------------------------------------------------------
+
 def Compute_k0(dict_sample):
     '''
     Compute the k0 = sigma_II/sigma_I.
@@ -101,9 +130,9 @@ def Compute_k0(dict_sample):
     F_top = 0
     for contact in dict_sample['L_contact_gw']:
         if contact.nature == 'gwlat':
-            F_lat = F_lat + self.Fwg_n
+            F_lat = F_lat + contact.Fwg_n
         elif contact.nature == 'gwz_max':
-            F_top = F_top + self.Fwg_n
+            F_top = F_top + contact.Fwg_n
 
     #compute surface
     S_top = math.pi*dict_sample['D_oedo']**2/4
