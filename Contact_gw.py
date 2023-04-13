@@ -227,13 +227,13 @@ def Update_wall_Neighborhoods(L_g, factor_neighborhood, d_oedo, z_min, z_max):
         p_z_max = grain.center[2] + grain.radius
 
         #grain-wall lateral wall
-        if d_oedo/2 - (r_to_center+grain.radius) < factor_neighborhood_IC*grain.radius :
+        if d_oedo/2 - (r_to_center+grain.radius) < factor_neighborhood*grain.radius :
             wall_neighborhood.append(grain)
         #grain-wall z_min
-        if p_z_min - z_min < factor_neighborhood_IC*grain.radius :
+        if p_z_min - z_min < factor_neighborhood*grain.radius :
             wall_neighborhood.append(grain)
         #grain-wall z_max
-        if z_max - p_z_max < factor_neighborhood_IC*grain.radius :
+        if z_max - p_z_max < factor_neighborhood*grain.radius :
             wall_neighborhood.append(grain)
 
     return wall_neighborhood

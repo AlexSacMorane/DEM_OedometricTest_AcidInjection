@@ -161,7 +161,7 @@ class Contact_gg:
         #compute the tangential force
         F_1_2_t = - kt*self.overlap_tangential - eta*v_tangential
         if np.linalg.norm(F_1_2_t) > abs(self.F_2_1_n*self.mu) or kt == 0:
-            F_1_2_t = abs(self.F_2_1_n*self.mu) * F_1_2_t/np.linalg.norm(F_1_2_t)
+            F_1_2_t = - abs(self.F_2_1_n*self.mu) * self.overlap_tangential/np.linalg.norm(self.overlap_tangential)
             self.ft = 0
             self.ft_damp = 0
         else :
@@ -211,7 +211,7 @@ def Update_Neighborhoods(dict_algorithm, dict_sample):
     for i_grain in range(len(dict_sample['L_g'])-1) :
         neighborhood = []
         for j_grain in range(i_grain+1,len(dict_sample['L_g'])):
-            if np.linalg.norm(dict_sample['L_g'][i_grain].center-dict_sample['L_g'][j_grain].center) < dict_algorithm['factor_neighborhood_IC']*(dict_sample['L_g'][i_grain].radius+dict_sample['L_g'][j_grain].radius):
+            if np.linalg.norm(dict_sample['L_g'][i_grain].center-dict_sample['L_g'][j_grain].center) < dict_algorithm['factor_neighborhood']*(dict_sample['L_g'][i_grain].radius+dict_sample['L_g'][j_grain].radius):
                 neighborhood.append(dict_sample['L_g'][j_grain])
         dict_sample['L_g'][i_grain].neighborhood = neighborhood
 
@@ -239,7 +239,7 @@ def Grains_contact_Neighborhoods(dict_material, dict_sample):
                 if (i_grain,j_grain) not in dict_sample['L_contact_ij']:  #contact not detected previously
                    #creation of contact
                    dict_sample['L_contact_ij'].append((i_grain,j_grain))
-                   dict_sample['L_contact'].append(Contact(dict_sample['id_contact'], grain_i, grain_j, dict_material))
+                   dict_sample['L_contact'].append(Contact_gg(dict_sample['id_contact'], grain_i, grain_j, dict_material))
                    dict_sample['id_contact'] = dict_sample['id_contact'] + 1
 
             else :
