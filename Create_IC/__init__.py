@@ -21,6 +21,7 @@ import Create_IC.Contact_gg_ic
 import Create_IC.Contact_gw_ic
 import Grain
 import Owntools.Write
+import Owntools.Plot
 
 #-------------------------------------------------------------------------------
 #Function
@@ -42,7 +43,7 @@ def LG_tempo(dict_geometry, dict_ic, dict_material, dict_sample, dict_sollicitat
             Nothing, but dictionnaries are updated
     """
     #define the z_max for the grains generation
-    dz_creation = dict_geometry['N_grain']/dict_ic['n_generation']*dict_ic['factor_ymax_box']*7*dict_geometry['R_50']**3/dict_sample['D_oedo']**2
+    dz_creation = dict_geometry['N_grain']/dict_ic['n_generation']*dict_ic['factor_zmax_box']*7*dict_geometry['R_50']**3/dict_sample['D_oedo']**2
     dict_sample['dz_creation'] = dz_creation
 
     #Creation of grains
@@ -116,9 +117,11 @@ def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollici
     if dict_ic['i_generation'] == dict_ic['n_generation']+1 :
         i_update_neighborhoods = dict_ic['i_update_neighborhoods_com']
         z_min = dict_sample['z_box_min']
+        gravity = dict_ic['gravity']
     else :
         i_update_neighborhoods = dict_ic['i_update_neighborhoods_gen']
         z_min = dict_sample['z_box_min_ic']
+        gravity = dict_ic['gravity']
     #-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
 
     i_DEM_0 = dict_ic['i_DEM_IC']
@@ -137,6 +140,7 @@ def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollici
     Ecin_tracker = []
     Ecin_stop = 0
     Zmax_tracker = []
+    F_top_tracker= []
     for grain in dict_ic['L_g_tempo']:
         Force_stop = Force_stop + 0.5*grain.mass*dict_sollicitation['gravity']
         Ecin_stop = Ecin_stop + 0.5*grain.mass*(dict_ic['Ecin_ratio_IC']*grain.radius/dict_ic['dt_DEM_IC'])**2
@@ -157,7 +161,7 @@ def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollici
 
         #Sollicitation computation
         for grain in dict_ic['L_g_tempo']:
-             grain.init_F_control(dict_sollicitation['gravity'])
+             grain.init_F_control(gravity)
         for contact in dict_ic['L_contact']+dict_ic['L_contact_gw']:
             contact.normal()
             contact.tangential(dict_ic['dt_DEM_IC'])
@@ -193,6 +197,7 @@ def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollici
         Force_tracker.append(F)
         Ecin_tracker.append(Ecin)
         Zmax_tracker.append(dict_sample['z_box_max'])
+        F_top_tracker.append(Fv)
 
         if dict_ic['i_DEM_IC'] % dict_ic['i_print_plot_IC'] ==0:
             if dict_sollicitation['gravity'] > 0 :
@@ -200,7 +205,7 @@ def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollici
             else :
                 print('i_DEM',str(dict_ic['i_DEM_IC'])+'/'+str(dict_ic['i_DEM_stop_IC']+i_DEM_0),'and Ecin',int(100*Ecin/Ecin_stop),'% and Confinement',int(100*Fv/dict_sollicitation['Vertical_Confinement_Force']),'%')
             if dict_ic['Debug_DEM'] :
-                Owntools.Plot.Plot_DEM_trackers('Debug/Configuration/DEM_trackers_init_'+str(dict_ic['i_generation'])+'.png', Force_tracker, Ecin_tracker, Zmax_tracker)
+                Owntools.Plot.Plot_DEM_trackers('Debug/Configuration/DEM_trackers_init_'+str(dict_ic['i_generation'])+'.png', Force_tracker, Ecin_tracker, Zmax_tracker, F_top_tracker)
                 Owntools.Write.Write_vtk('Debug/Configuration/Init/configuration_'+str(dict_ic['i_DEM_IC'])+'.vtk', dict_ic['L_g_tempo'])
 
         #Check stop conditions for DEM
@@ -210,7 +215,7 @@ def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollici
             if Ecin < Ecin_stop and F < Force_stop and (0.95*dict_sollicitation['Vertical_Confinement_Force']<Fv and Fv<1.05*dict_sollicitation['Vertical_Confinement_Force']):
                   DEM_loop_statut = False
         else:
-            if Ecin < Ecin_stop and dict_ic['i_DEM_IC'] >= dict_ic['i_DEM_stop_IC']*0.1 + i_DEM_0 and (0.95*dict_sollicitation['Vertical_Confinement_Force']<Fv and Fv<1.05*dict_sollicitation['Vertical_Confinement_Force']):
+            if Ecin < Ecin_stop and dict_ic['i_DEM_IC'] >= dict_ic['i_DEM_stop_IC']*0.5 + i_DEM_0 and (0.95*dict_sollicitation['Vertical_Confinement_Force']<Fv and Fv<1.05*dict_sollicitation['Vertical_Confinement_Force']):
                 DEM_loop_statut = False
         if dict_ic['L_g_tempo'] == []:
             DEM_loop_statut = False
@@ -240,9 +245,14 @@ def Create_grains(dict_ic, dict_geometry, dict_sample, dict_material, simulation
     n_created = 0
     for L_g_tempo in dict_ic['L_L_g_tempo']:
         n_created = n_created + len(L_g_tempo)
+    number_ratio_1_1and2 = (dict_geometry['mass_ratio_1_1and2']*dict_geometry['R_50_2']**3)/(dict_geometry['mass_ratio_1_1and2']*dict_geometry['R_50_2']**3+(1-dict_geometry['mass_ratio_1_1and2'])*dict_geometry['R_50_1']**3)
 
     for i in range(n_created, int(dict_geometry['N_grain']*dict_ic['i_generation']/dict_ic['n_generation'])):
-        radius = np.random.normal(dict_geometry['R_50'], dict_geometry['sigma_psd'])
+        if random.uniform(0,1) < number_ratio_1_1and2 :
+            radius = np.random.normal(dict_geometry['R_50_1'], dict_geometry['sigma_psd_1'])
+        else :
+            radius = np.random.normal(dict_geometry['R_50_2'], dict_geometry['sigma_psd_2'])
+        #radius = np.random.normal(dict_geometry['R_50'], dict_geometry['sigma_psd'])
         if radius > 0:
             i_test = 0
             grain_created = False
