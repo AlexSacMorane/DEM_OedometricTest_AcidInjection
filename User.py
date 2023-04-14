@@ -38,17 +38,34 @@ def All_parameters():
 
     N_grain = 1000 #total number of grains
 
-    #a normal law is assumed for the PSD
-    R_50 = 300 #µm expectation
-    sigma_psd = 50 #µm standard deviation
+    #a normal law is assumed for the PSDs
+
+    #PSD 1
+    R_50_1 = 300 #µm expectation
+    sigma_psd_1 = 50 #µm standard deviation
     #95% are in [R_50-2*sigma_psd, R_50+2*sigma_psd]
     #99,7% is in [R_50-3*sigma_psd, R_50+3*sigma_psd]
+
+    #PSD 2
+    R_50_2 = 80 #µm expectation
+    sigma_psd_2 = 10 #µm standard deviation
+    #95% are in [R_50-2*sigma_psd, R_50+2*sigma_psd]
+    #99,7% is in [R_50-3*sigma_psd, R_50+3*sigma_psd]
+
+    mass_ratio_1_1and2 = 1
+
+    #recompute r_mean with 1 + 2
 
     #write dict
     dict_geometry = {
     'N_grain' : N_grain,
-    'R_50' : R_50,
-    'sigma_psd' : sigma_psd
+    'R_50' : R_50_1,
+    'sigma_psd' : sigma_psd_1,
+    'R_50_1' : R_50_1, #not used for the moment
+    'sigma_psd_1' : sigma_psd_1,
+    'R_50_2' : R_50_2,
+    'sigma_psd_2' : sigma_psd_2,
+    'mass_ratio_1_1and2' : mass_ratio_1_1and2
     }
 
     #---------------------------------------------------------------------------
@@ -91,7 +108,7 @@ def All_parameters():
     f_mass0_dissolved_mas = 0.5 #maximum of the initial mass dissolved
 
     #DEM parameters
-    dt_DEM_crit = math.pi*R_50/(0.16*nu+0.88)*math.sqrt(rho*(2+2*nu)/Y) #s critical time step from O'Sullivan 2011
+    dt_DEM_crit = math.pi*dict_geometry['R_50']/(0.16*nu+0.88)*math.sqrt(rho*(2+2*nu)/Y) #s critical time step from O'Sullivan 2011
     dt_DEM = dt_DEM_crit/7 #s time step during DEM simulation
     factor_neighborhood = 1.9 #margin to detect a grain into a neighborhood
     i_update_neighborhoods = 200 #the frequency of the update of the neighborhood of the grains and the walls
@@ -135,7 +152,7 @@ def All_parameters():
     #---------------------------------------------------------------------------
     #External sollicitation parameters
 
-    gravity = 0
+    gravity = 0 #µm/s2
     Vertical_Confinement_Surface_Force = 100*10**-3 #µN/µm2 used to compute the Vertical_Confinement_Force
     Vertical_Confinement_Force = Vertical_Confinement_Surface_Force*(math.pi*D_oedo**2/4) #µN
     f_R50_0_dissolved = 0.001 #fraction of the initial mean radius dissolved
@@ -150,30 +167,32 @@ def All_parameters():
     #Initial condition parameters
 
     n_generation = 3 #number of grains generation
-    factor_ymax_box = 3 #margin to generate grains
+    factor_zmax_box = 3 #margin to generate grains
     N_test_max = 5000 # maximum number of tries to generate a grain without overlap
-    i_DEM_stop_IC = 3000 #stop criteria for DEM during IC
-    Debug_DEM_IC = False #plot configuration inside DEM during IC
+    i_DEM_stop_IC = 5000 #stop criteria for DEM during IC
+    Debug_DEM_IC = True #plot configuration inside DEM during IC
     i_print_plot_IC = 300 #frenquency of the print and plot (if Debug_DEM_IC) for IC
     dt_DEM_IC = dt_DEM_crit/5 #s time step during IC
-    Ecin_ratio_IC = 0.001
+    Ecin_ratio_IC = 0.0005
     factor_neighborhood_IC = 1.5 #margin to detect a grain into a neighborhood
     i_update_neighborhoods_gen = 50 #the frequency of the update of the neighborhood of the grains and the walls during IC generations
     i_update_neighborhoods_com = 200 #the frequency of the update of the neighborhood of the grains and the walls during IC combination
+    gravity = 100*N_grain/n_generation*(factor_zmax_box)*dict_geometry['R_50']**3/D_oedo**2/i_DEM_stop_IC**2/dt_DEM_IC**2 #apply only in the ic phase with one generation µm/s2
 
     #write dict
     dict_ic = {
     'n_generation' : n_generation,
     'i_update_neighborhoods_gen': i_update_neighborhoods_gen,
     'i_update_neighborhoods_com': i_update_neighborhoods_com,
-    'factor_ymax_box' : factor_ymax_box,
+    'factor_zmax_box' : factor_zmax_box,
     'i_DEM_stop_IC' : i_DEM_stop_IC,
     'Debug_DEM' : Debug_DEM_IC,
     'dt_DEM_IC' : dt_DEM_IC,
     'Ecin_ratio_IC' : Ecin_ratio_IC,
     'i_print_plot_IC' : i_print_plot_IC,
     'factor_neighborhood_IC' : factor_neighborhood_IC,
-    'N_test_max' : N_test_max
+    'N_test_max' : N_test_max,
+    'gravity' : gravity
     }
 
     #---------------------------------------------------------------------------
