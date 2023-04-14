@@ -234,6 +234,7 @@ def DEM_loading(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_
     Ecin_tracker = []
     Ecin_stop = 0
     Zmax_tracker = []
+    F_top_tracker = []
     for grain in dict_sample['L_g']:
         Force_stop = Force_stop + 0.5*grain.mass*dict_sollicitation['gravity']
         Ecin_stop = Ecin_stop + 0.5*grain.mass*(dict_algorithm['Ecin_ratio']*grain.radius/dict_algorithm['dt_DEM'])**2
@@ -290,6 +291,7 @@ def DEM_loading(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_
         Force_tracker.append(F)
         Ecin_tracker.append(Ecin)
         Zmax_tracker.append(dict_sample['z_box_max'])
+        F_top_tracker.append(dict_sollicitation['Force_on_upper_wall'])
 
         if dict_algorithm['i_DEM'] % dict_algorithm['i_print_plot'] ==0:
             if dict_sollicitation['gravity'] > 0 :
@@ -297,7 +299,7 @@ def DEM_loading(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_
             else :
                 print('i_DEM',str(dict_algorithm['i_DEM'])+'/'+str(dict_algorithm['i_DEM_stop']+i_DEM_0),'and Ecin',int(100*Ecin/Ecin_stop),'% and Confinement',int(100*dict_sollicitation['Force_on_upper_wall']/dict_sollicitation['Vertical_Confinement_Force']),'%')
             if dict_algorithm['Debug_DEM'] :
-                Owntools.Plot.Plot_DEM_trackers('Debug/Configuration/DEM_trackers_'+str(dict_algorithm['i_dissolution'])+'.png', Force_tracker, Ecin_tracker, Zmax_tracker)
+                Owntools.Plot.Plot_DEM_trackers('Debug/Configuration/DEM_trackers_'+str(dict_algorithm['i_dissolution'])+'.png', Force_tracker, Ecin_tracker, Zmax_tracker, F_top_tracker)
                 Owntools.Write.Write_vtk('Debug/Configuration/Main/configuration_'+str(dict_algorithm['i_DEM'])+'.vtk', dict_sample['L_g'])
 
         #Check stop conditions for DEM
