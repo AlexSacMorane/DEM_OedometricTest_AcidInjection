@@ -242,25 +242,28 @@ def Create_grains(dict_ic, dict_geometry, dict_sample, dict_material, simulation
 
     for i in range(n_created, int(dict_geometry['N_grain']*dict_ic['i_generation']/dict_ic['n_generation'])):
         radius = np.random.normal(dict_geometry['R_50'], dict_geometry['sigma_psd'])
-        i_test = 0
-        grain_created = False
-        while (not grain_created) and i_test < dict_ic['N_test_max']:
-            i_test = i_test + 1
-            r_to_center = random.uniform(0,dict_sample['D_oedo']/2-1.1*radius)
-            angle = random.uniform(0, 2*math.pi)
-            center = np.array([r_to_center*math.cos(angle),\
-                               r_to_center*math.sin(angle),\
-                               random.uniform(dict_sample['z_box_min_ic']+1.1*radius, dict_sample['z_box_min_ic'] + dict_sample['dz_creation'])])
-            g_tempo = Grain_ic.Grain_Tempo(dict_ic['last_id']+1, center, radius, dict_material)
-            grain_created = True
-            for grain in dict_ic['L_g_tempo']:
-                if Contact_gg_ic.Grains_contact_f(g_tempo, grain):
-                    grain_created = False
-        if i_test == dict_ic['N_test_max'] and not grain_created:
-            simulation_report.write_and_print('Grain '+str(dict_ic['last_id']+1)+' has not been created after '+str(i_test)+' tries\n','Grain '+str(dict_ic['last_id']+1)+' has not been created after '+str(i_test)+' tries')
+        if radius > 0:
+            i_test = 0
+            grain_created = False
+            while (not grain_created) and i_test < dict_ic['N_test_max']:
+                i_test = i_test + 1
+                r_to_center = random.uniform(0,dict_sample['D_oedo']/2-1.1*radius)
+                angle = random.uniform(0, 2*math.pi)
+                center = np.array([r_to_center*math.cos(angle),\
+                                   r_to_center*math.sin(angle),\
+                                   random.uniform(dict_sample['z_box_min_ic']+1.1*radius, dict_sample['z_box_min_ic'] + dict_sample['dz_creation'])])
+                g_tempo = Grain_ic.Grain_Tempo(dict_ic['last_id']+1, center, radius, dict_material)
+                grain_created = True
+                for grain in dict_ic['L_g_tempo']:
+                    if Contact_gg_ic.Grains_contact_f(g_tempo, grain):
+                        grain_created = False
+            if i_test == dict_ic['N_test_max'] and not grain_created:
+                simulation_report.write_and_print('Grain '+str(dict_ic['last_id']+1)+' has not been created after '+str(i_test)+' tries\n','Grain '+str(dict_ic['last_id']+1)+' has not been created after '+str(i_test)+' tries')
+            else :
+                dict_ic['L_g_tempo'].append(g_tempo)
+                dict_ic['last_id'] = dict_ic['last_id'] + 1
         else :
-            dict_ic['L_g_tempo'].append(g_tempo)
-            dict_ic['last_id'] = dict_ic['last_id'] + 1
+            simulation_report.write_and_print('Grain '+str(dict_ic['last_id']+1)+' has not been created as r <= 0\n','Grain '+str(dict_ic['last_id']+1)+' has not been created as r <= 0')
 
 #-------------------------------------------------------------------------------
 
