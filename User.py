@@ -36,11 +36,11 @@ def All_parameters():
     #---------------------------------------------------------------------------
     #Geometry parameters
 
-    N_grain = 800 #total number of grains
+    N_grain = 1000 #total number of grains
 
     #a normal law is assumed for the PSD
-    R_50 = 350 #µm expectation
-    sigma_psd = 25 #µm standard deviation
+    R_50 = 300 #µm expectation
+    sigma_psd = 50 #µm standard deviation
     #95% are in [R_50-2*sigma_psd, R_50+2*sigma_psd]
     #99,7% is in [R_50-3*sigma_psd, R_50+3*sigma_psd]
 
@@ -70,7 +70,7 @@ def All_parameters():
     Y = 70*(10**9)*(10**6)*(10**(-12)) #Young Modulus µN/µm2
     nu = 0.3 #Poisson's ratio
     rho = 2500*10**(-6*3) #density kg/µm3
-    mu_friction_gg = 0 #grain-grain
+    mu_friction_gg = 0.5 #grain-grain
     mu_friction_gw = 0 #grain-wall
     coeff_restitution = 0.2 #1 is perfect elastic
 
@@ -87,21 +87,21 @@ def All_parameters():
     #Algorithm parameters
 
     #stop criteria
-    n_dissolution = 2 #number of dissolution increment
+    n_dissolution = 30 #number of dissolution increment
     f_mass0_dissolved_mas = 0.5 #maximum of the initial mass dissolved
 
     #DEM parameters
     dt_DEM_crit = math.pi*R_50/(0.16*nu+0.88)*math.sqrt(rho*(2+2*nu)/Y) #s critical time step from O'Sullivan 2011
     dt_DEM = dt_DEM_crit/7 #s time step during DEM simulation
-    factor_neighborhood = 1.5 #margin to detect a grain into a neighborhood
-    i_update_neighborhoods = 50 #the frequency of the update of the neighborhood of the grains and the walls
+    factor_neighborhood = 1.9 #margin to detect a grain into a neighborhood
+    i_update_neighborhoods = 200 #the frequency of the update of the neighborhood of the grains and the walls
     #Stop criteria of the DEM
     i_DEM_stop = 4000 #maximum iteration for one DEM simulation
-    Ecin_ratio = 0.001
+    Ecin_ratio = 0.0001
 
     #List of plot to do
     Debug_DEM = True #plot configuration
-    i_print_plot = 50 #frenquency of the print and plot (if Debug_DEM) in DEM step
+    i_print_plot = 100 #frenquency of the print and plot (if Debug_DEM) in DEM step
 
     #Save the simulation
     SaveData = False #Save data or not
@@ -136,8 +136,8 @@ def All_parameters():
     #External sollicitation parameters
 
     gravity = 0
-    Vertical_Confinement_Linear_Force = Y*2*R_50/100 #µN/µm used to compute the Vertical_Confinement_Force
-    Vertical_Confinement_Force = Vertical_Confinement_Linear_Force*(D_oedo) #µN
+    Vertical_Confinement_Surface_Force = 100*10**-3 #µN/µm2 used to compute the Vertical_Confinement_Force
+    Vertical_Confinement_Force = Vertical_Confinement_Surface_Force*(math.pi*D_oedo**2/4) #µN
     f_R50_0_dissolved = 0.001 #fraction of the initial mean radius dissolved
 
     dict_sollicitation = {
@@ -153,7 +153,7 @@ def All_parameters():
     factor_ymax_box = 3 #margin to generate grains
     N_test_max = 5000 # maximum number of tries to generate a grain without overlap
     i_DEM_stop_IC = 3000 #stop criteria for DEM during IC
-    Debug_DEM_IC = True #plot configuration inside DEM during IC
+    Debug_DEM_IC = False #plot configuration inside DEM during IC
     i_print_plot_IC = 300 #frenquency of the print and plot (if Debug_DEM_IC) for IC
     dt_DEM_IC = dt_DEM_crit/5 #s time step during IC
     Ecin_ratio_IC = 0.001
