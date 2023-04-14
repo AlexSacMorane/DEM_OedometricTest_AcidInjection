@@ -163,7 +163,7 @@ class Contact_gw:
        if self.tangential_old_statut:
            #if a reaction has been already computed
            #need to project the tangential overlap into the new tangential plane
-           self.overlap_tangential = self.overlap_tangential - np.dot(self.overlap_tangential, self.pc_normal)*self.pc_normal
+           self.overlap_tangential = self.overlap_tangential - np.dot(self.overlap_tangential, self.nwg)*self.nwg
        else:
            self.tangential_old_statut = True
 
@@ -180,19 +180,19 @@ class Contact_gw:
        eta = 2 * gamma * math.sqrt(mass_eq*kt)/2 #damping tangential term is corrected from the damping normal term
 
        #compute the tangential overlap
-       r = self.g.radius - self.overlap
-       v_g = self.g.v + r*np.cross(self.pc_normal, self.g.w)
-       v_tangential = v_g - np.dot(v_g, self.pc_normal)*self.pc_normal
+       r = self.g.radius - self.overlap/2
+       v_g = self.g.v + r*np.cross(self.nwg, self.g.w)
+       v_tangential = v_g - np.dot(v_g, self.nwg)*self.nwg
        self.overlap_tangential = self.overlap_tangential + v_tangential*dt_DEM
 
        #compute the tangential force
-       F_g_w_t = - self.kt*self.overlap_tangential
-       if np.linalg.norm(F_g_w_t) > abs(self.Fwg_n*self.mu) or kt == 0:
-           F_g_w_t = abs(self.Fwg_n*self.mu) * F_g_w_t/np.linalg.norm(F_g_w_t)
-           self.ft = 0
+       F_w_g_t = - self.kt*self.overlap_tangential
+       if np.linalg.norm(F_w_g_t) > abs(self.Fwg_n*self.mu) or kt == 0:
+           F_w_g_t = abs(self.Fwg_n*self.mu) * F_w_g_t/np.linalg.norm(F_w_g_t)
+           self.ft = abs(self.Fwg_n*self.mu)
        else :
-           self.ft = np.linalg.norm(F_g_w_t)
-       self.g.add_F( F_g_w_t, self.g.center + self.g.radius*self.pc_normal)
+           self.ft = np.linalg.norm(F_w_g_t)
+       self.g.add_F( F_w_g_t, self.g.center - (self.g.radius - self.overlap/2)*self.nwg)
 
    #no contact finally
    else :

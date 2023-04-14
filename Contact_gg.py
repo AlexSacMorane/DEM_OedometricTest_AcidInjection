@@ -154,21 +154,21 @@ class Contact_gg:
         #compute the tangential overlap
         r1 = self.g1.radius - self.overlap_normal/2
         r2 = self.g2.radius - self.overlap_normal/2
-        v_12 = self.g1.v - self.g2.v + r1*np.cross(self.pc_normal, self.g1.w) + r2*np.cross(self.pc_normal, self.g2.w)
+        v_12 = self.g1.v - self.g2.v - r1*np.cross(self.pc_normal, self.g1.w) - r2*np.cross(self.pc_normal, self.g2.w)
         v_tangential = v_12 - np.dot(v_12, self.pc_normal)*self.pc_normal
         self.overlap_tangential = self.overlap_tangential + v_tangential*dt_DEM
 
         #compute the tangential force
-        F_1_2_t = - kt*self.overlap_tangential - eta*v_tangential
-        if np.linalg.norm(F_1_2_t) > abs(self.F_2_1_n*self.mu) or kt == 0:
-            F_1_2_t = - abs(self.F_2_1_n*self.mu) * self.overlap_tangential/np.linalg.norm(self.overlap_tangential)
-            self.ft = 0
+        F_2_1_t = - kt*self.overlap_tangential - eta*v_tangential
+        if np.linalg.norm(F_2_1_t) > abs(self.F_2_1_n*self.mu) or kt == 0:
+            F_2_1_t = - abs(self.F_2_1_n*self.mu) * self.overlap_tangential/np.linalg.norm(self.overlap_tangential)
+            self.ft = abs(self.F_2_1_n*self.mu)
             self.ft_damp = 0
         else :
             self.ft = np.linalg.norm(-kt*self.overlap_tangential)
             self.ft_damp = np.linalg.norm(-eta*v_tangential)
-        self.g1.add_F( F_1_2_t, self.g1.center + self.g1.radius*self.pc_normal)
-        self.g2.add_F(-F_1_2_t, self.g2.center - self.g2.radius*self.pc_normal)
+        self.g1.add_F( F_2_1_t, self.g1.center + (self.g1.radius - self.overlap_normal/2)*self.pc_normal)
+        self.g2.add_F(-F_2_1_t, self.g2.center - (self.g2.radius - self.overlap_normal/2)*self.pc_normal)
 
     #no contact finally
     else :
