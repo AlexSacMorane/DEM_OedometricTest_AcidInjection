@@ -84,29 +84,33 @@ def Plot_custom(namefile, L_data_x, L_data_y, L_label_name, L_label):
 
 #-------------------------------------------------------------------------------
 
-def Plot_DEM_trackers(namefile, Force_tracker, Ecin_tracker, Zmax_tracker):
+def Plot_DEM_trackers(namefile, Force_tracker, Ecin_tracker, Zmax_tracker, F_top_tracker):
     """
     Plot trackers from DEM during loading.
 
         Input :
             a namefile (a str)
-            three list of tracker (lists)
+            four lists of tracker (lists)
         Output :
             Nothing, but a .png file is generated (a file)
     """
     plt.figure(1,figsize=(16,9))
 
-    plt.subplot(131)
+    plt.subplot(221)
     plt.title('Force applied on particles (µN)')
     plt.plot(Force_tracker)
 
-    plt.subplot(132)
+    plt.subplot(222)
     plt.title('Kinetic energy of particles (10-12 J)')
     plt.plot(Ecin_tracker)
 
-    plt.subplot(133)
+    plt.subplot(223)
     plt.title('Upper wall position (µm)')
     plt.plot(Zmax_tracker)
+
+    plt.subplot(224)
+    plt.title('Force on upper wall (µN)')
+    plt.plot(F_top_tracker)
 
     plt.savefig(namefile)
     plt.close(1)
