@@ -213,11 +213,15 @@ def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollici
         if dict_ic['i_DEM_IC'] >= dict_ic['i_DEM_stop_IC'] + i_DEM_0:
              DEM_loop_statut = False
         if dict_sollicitation['gravity'] > 0:
-            if Ecin < Ecin_stop and F < Force_stop and (0.95*dict_sollicitation['Vertical_Confinement_Force']<Fv and Fv<1.05*dict_sollicitation['Vertical_Confinement_Force']):
-                  DEM_loop_statut = False
+            if Ecin < Ecin_stop and F < Force_stop :
+                window_F_top = F_top_tracker[-dict_ic['n_window']:]
+                if (0.95*dict_sollicitation['Vertical_Confinement_Force']<min(window_F_top) and max(window_F_top)<1.05*dict_sollicitation['Vertical_Confinement_Force']):
+                    DEM_loop_statut = False
         else:
-            if Ecin < Ecin_stop and dict_ic['i_DEM_IC'] >= dict_ic['i_DEM_stop_IC']*0.5 + i_DEM_0 and (0.95*dict_sollicitation['Vertical_Confinement_Force']<Fv and Fv<1.05*dict_sollicitation['Vertical_Confinement_Force']):
-                DEM_loop_statut = False
+            if Ecin < Ecin_stop and dict_ic['i_DEM_IC'] >= dict_ic['i_DEM_stop_IC']*0.5 + i_DEM_0 :
+                window_F_top = F_top_tracker[-dict_ic['n_window']:]
+                if (0.95*dict_sollicitation['Vertical_Confinement_Force']<min(window_F_top) and max(window_F_top)<1.05*dict_sollicitation['Vertical_Confinement_Force']):
+                    DEM_loop_statut = False
         if dict_ic['L_g_tempo'] == []:
             DEM_loop_statut = False
 

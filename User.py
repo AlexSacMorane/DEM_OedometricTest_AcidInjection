@@ -104,7 +104,7 @@ def All_parameters():
     #Algorithm parameters
 
     #stop criteria
-    n_dissolution = 30 #number of dissolution increment
+    n_dissolution = 50 #number of dissolution increment
     f_mass0_dissolved_mas = 0.5 #maximum of the initial mass dissolved
 
     #DEM parameters
@@ -115,6 +115,7 @@ def All_parameters():
     #Stop criteria of the DEM
     i_DEM_stop = 4000 #maximum iteration for one DEM simulation
     Ecin_ratio = 0.0001
+    n_window = 100
 
     #List of plot to do
     Debug_DEM = True #plot configuration
@@ -146,6 +147,7 @@ def All_parameters():
     'i_update_neighborhoods': i_update_neighborhoods,
     'i_DEM_stop' : i_DEM_stop,
     'Ecin_ratio' : Ecin_ratio,
+    'n_window' : n_window,
     'foldername' : foldername,
     }
 
@@ -155,7 +157,7 @@ def All_parameters():
     gravity = 0 #µm/s2
     Vertical_Confinement_Surface_Force = 100*10**-3 #µN/µm2 used to compute the Vertical_Confinement_Force
     Vertical_Confinement_Force = Vertical_Confinement_Surface_Force*(math.pi*D_oedo**2/4) #µN
-    f_R50_0_dissolved = 0.001 #fraction of the initial mean radius dissolved
+    f_R50_0_dissolved = 0.005 #fraction of the initial mean radius dissolved
 
     dict_sollicitation = {
     'gravity' : gravity,
@@ -166,13 +168,14 @@ def All_parameters():
     #---------------------------------------------------------------------------
     #Initial condition parameters
 
-    n_generation = 3 #number of grains generation
-    factor_zmax_box = 3 #margin to generate grains
+    n_generation = 5 #number of grains generation
+    factor_zmax_box = 2 #margin to generate grains
     N_test_max = 5000 # maximum number of tries to generate a grain without overlap
     i_DEM_stop_IC = 5000 #stop criteria for DEM during IC
     Debug_DEM_IC = True #plot configuration inside DEM during IC
     i_print_plot_IC = 300 #frenquency of the print and plot (if Debug_DEM_IC) for IC
     dt_DEM_IC = dt_DEM_crit/5 #s time step during IC
+    n_window = 100
     Ecin_ratio_IC = 0.0005
     factor_neighborhood_IC = 1.5 #margin to detect a grain into a neighborhood
     i_update_neighborhoods_gen = 50 #the frequency of the update of the neighborhood of the grains and the walls during IC generations
@@ -188,6 +191,7 @@ def All_parameters():
     'i_DEM_stop_IC' : i_DEM_stop_IC,
     'Debug_DEM' : Debug_DEM_IC,
     'dt_DEM_IC' : dt_DEM_IC,
+    'n_window' : n_window,
     'Ecin_ratio_IC' : Ecin_ratio_IC,
     'i_print_plot_IC' : i_print_plot_IC,
     'factor_neighborhood_IC' : factor_neighborhood_IC,
