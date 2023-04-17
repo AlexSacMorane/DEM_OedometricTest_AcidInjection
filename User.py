@@ -52,20 +52,25 @@ def All_parameters():
     #95% are in [R_50-2*sigma_psd, R_50+2*sigma_psd]
     #99,7% is in [R_50-3*sigma_psd, R_50+3*sigma_psd]
 
+    #distribution between PSD 1 and PSD 2
     mass_ratio_1_1and2 = 1
 
     #recompute r_mean with 1 + 2
+    number_ratio_1_1and2 = (mass_ratio_1_1and2*R_50_2**3)/(mass_ratio_1_1and2*R_50_2**3+(1-mass_ratio_1_1and2)*R_50_1**3)
+    R_50 = number_ratio_1_1and2*R_50_1 + (1-number_ratio_1_1and2)*R_50_2
+
+    #target for compacity e = Vg/Vb
+    e_target = 0.7
 
     #write dict
     dict_geometry = {
     'N_grain' : N_grain,
-    'R_50' : R_50_1,
-    'sigma_psd' : sigma_psd_1,
+    'R_50' : R_50,
     'R_50_1' : R_50_1, #not used for the moment
     'sigma_psd_1' : sigma_psd_1,
     'R_50_2' : R_50_2,
     'sigma_psd_2' : sigma_psd_2,
-    'mass_ratio_1_1and2' : mass_ratio_1_1and2
+    'mass_ratio_1_1and2' : mass_ratio_1_1and2,
     }
 
     #---------------------------------------------------------------------------
