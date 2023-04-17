@@ -300,7 +300,8 @@ def DEM_loading(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_
                 print('i_DEM',str(dict_algorithm['i_DEM'])+'/'+str(dict_algorithm['i_DEM_stop']+i_DEM_0),'and Ecin',int(100*Ecin/Ecin_stop),'% and Confinement',int(100*dict_sollicitation['Force_on_upper_wall']/dict_sollicitation['Vertical_Confinement_Force']),'%')
             if dict_algorithm['Debug_DEM'] :
                 Owntools.Plot.Plot_DEM_trackers('Debug/Configuration/DEM_trackers_'+str(dict_algorithm['i_dissolution'])+'.png', Force_tracker, Ecin_tracker, Zmax_tracker, F_top_tracker)
-                Owntools.Write.Write_vtk('Debug/Configuration/Main/configuration_'+str(dict_algorithm['i_DEM'])+'.vtk', dict_sample['L_g'])
+                Owntools.Write.Write_grains_vtk('Debug/Configuration/Main/grains_'+str(dict_algorithm['i_DEM'])+'.vtk', dict_sample['L_g'])
+                Owntools.Write.Write_box_vtk('Debug/Configuration/Main/box_'+str(dict_algorithm['i_DEM'])+'.vtk', dict_sample)
 
         #Check stop conditions for DEM
         if dict_algorithm['i_DEM'] >= dict_algorithm['i_DEM_stop'] + i_DEM_0:
