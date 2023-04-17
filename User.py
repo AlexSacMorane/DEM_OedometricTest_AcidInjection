@@ -60,17 +60,17 @@ def All_parameters():
     R_50 = number_ratio_1_1and2*R_50_1 + (1-number_ratio_1_1and2)*R_50_2
 
     #target for compacity e = Vg/Vb
-    e_target = 0.7
+    e_target = 0.7 #for IC with grain radius
 
     #write dict
     dict_geometry = {
     'N_grain' : N_grain,
-    'R_50' : R_50,
     'R_50_1' : R_50_1, #not used for the moment
     'sigma_psd_1' : sigma_psd_1,
     'R_50_2' : R_50_2,
     'sigma_psd_2' : sigma_psd_2,
     'mass_ratio_1_1and2' : mass_ratio_1_1and2,
+    'R_50' : R_50,
     'e_target' : e_target
     }
 
@@ -144,17 +144,17 @@ def All_parameters():
     dict_algorithm = {
     'n_dissolution' : n_dissolution,
     'f_mass0_dissolved_mas' : f_mass0_dissolved_mas,
-    'Debug_DEM' : Debug_DEM,
-    'i_print_plot' : i_print_plot,
-    'factor_neighborhood' : factor_neighborhood,
-    'SaveData' : SaveData,
-    'namefile' : namefile,
     'dt_DEM' : dt_DEM,
+    'factor_neighborhood' : factor_neighborhood,
     'i_update_neighborhoods': i_update_neighborhoods,
     'i_DEM_stop' : i_DEM_stop,
     'Ecin_ratio' : Ecin_ratio,
     'n_window' : n_window,
+    'Debug_DEM' : Debug_DEM,
+    'i_print_plot' : i_print_plot,
+    'SaveData' : SaveData,
     'foldername' : foldername,
+    'namefile' : namefile,
     }
 
     #---------------------------------------------------------------------------
@@ -174,15 +174,18 @@ def All_parameters():
     #---------------------------------------------------------------------------
     #Initial condition parameters
 
+    #method to generate ic
+    method_ic = 'Deposition' #IncreaseRadius or Deposition
+
     n_generation = 5 #number of grains generation
-    factor_zmax_box = 2 #margin to generate grains
+    factor_zmax_box = 2 #margin to generate grains (Deposition)
     N_test_max = 5000 # maximum number of tries to generate a grain without overlap
     i_DEM_stop_IC = 5000 #stop criteria for DEM during IC
     Debug_DEM_IC = True #plot configuration inside DEM during IC
     i_print_plot_IC = 300 #frenquency of the print and plot (if Debug_DEM_IC) for IC
     dt_DEM_IC = dt_DEM_crit/5 #s time step during IC
-    n_window = 100
-    Ecin_ratio_IC = 0.0005
+    n_window = 100 #window to detect the steady-state
+    Ecin_ratio_IC = 0.0005 #criteria on kinetic energy to detect the steady-state
     factor_neighborhood_IC = 1.5 #margin to detect a grain into a neighborhood
     i_update_neighborhoods_gen = 50 #the frequency of the update of the neighborhood of the grains and the walls during IC generations
     i_update_neighborhoods_com = 200 #the frequency of the update of the neighborhood of the grains and the walls during IC combination
@@ -190,18 +193,19 @@ def All_parameters():
 
     #write dict
     dict_ic = {
+    'method_ic' : method_ic,
     'n_generation' : n_generation,
-    'i_update_neighborhoods_gen': i_update_neighborhoods_gen,
-    'i_update_neighborhoods_com': i_update_neighborhoods_com,
     'factor_zmax_box' : factor_zmax_box,
+    'N_test_max' : N_test_max,
     'i_DEM_stop_IC' : i_DEM_stop_IC,
     'Debug_DEM' : Debug_DEM_IC,
+    'i_print_plot_IC' : i_print_plot_IC,
     'dt_DEM_IC' : dt_DEM_IC,
     'n_window' : n_window,
     'Ecin_ratio_IC' : Ecin_ratio_IC,
-    'i_print_plot_IC' : i_print_plot_IC,
     'factor_neighborhood_IC' : factor_neighborhood_IC,
-    'N_test_max' : N_test_max,
+    'i_update_neighborhoods_gen': i_update_neighborhoods_gen,
+    'i_update_neighborhoods_com': i_update_neighborhoods_com,
     'gravity' : gravity
     }
 
