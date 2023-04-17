@@ -108,7 +108,7 @@ def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollici
             a material dictionnary (a dict)
             a smaple dictionnary (a dict)
             a sollicitations dictionnary (a dict)
-            a simultion report (a report)
+            a simulation report (a report)
         Output :
             Nothing, but initial condition dictionnary is updated
     """
@@ -141,6 +141,7 @@ def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollici
     Ecin_stop = 0
     Zmax_tracker = []
     F_top_tracker= []
+    s_top_tracker= []
     for grain in dict_ic['L_g_tempo']:
         Force_stop = Force_stop + 0.5*grain.mass*dict_sollicitation['gravity']
         Ecin_stop = Ecin_stop + 0.5*grain.mass*(dict_ic['Ecin_ratio_IC']*grain.radius/dict_ic['dt_DEM_IC'])**2
@@ -198,6 +199,7 @@ def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollici
         Ecin_tracker.append(Ecin)
         Zmax_tracker.append(dict_sample['z_box_max'])
         F_top_tracker.append(Fv)
+        s_top_tracker.append(Fv/(math.pi*dict_sample['D_oedo']**2/4))
 
         if dict_ic['i_DEM_IC'] % dict_ic['i_print_plot_IC'] ==0:
             if dict_sollicitation['gravity'] > 0 :
@@ -205,7 +207,7 @@ def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollici
             else :
                 print('i_DEM',str(dict_ic['i_DEM_IC'])+'/'+str(dict_ic['i_DEM_stop_IC']+i_DEM_0),'and Ecin',int(100*Ecin/Ecin_stop),'% and Confinement',int(100*Fv/dict_sollicitation['Vertical_Confinement_Force']),'%')
             if dict_ic['Debug_DEM'] :
-                Owntools.Plot.Plot_DEM_trackers('Debug/Configuration/DEM_trackers_init_'+str(dict_ic['i_generation'])+'.png', Force_tracker, Ecin_tracker, Zmax_tracker, F_top_tracker)
+                Owntools.Plot.Plot_DEM_trackers('Debug/Configuration/DEM_trackers_init_'+str(dict_ic['i_generation'])+'.png', Force_tracker, Ecin_tracker, Zmax_tracker, s_top_tracker)
                 Owntools.Write.Write_grains_vtk('Debug/Configuration/Init/grains_'+str(dict_ic['i_DEM_IC'])+'.vtk', dict_ic['L_g_tempo'])
                 Owntools.Write.Write_box_vtk('Debug/Configuration/Init/box_'+str(dict_ic['i_DEM_IC'])+'.vtk', dict_sample)
 
