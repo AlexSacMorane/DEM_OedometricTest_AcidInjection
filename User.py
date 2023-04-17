@@ -71,6 +71,7 @@ def All_parameters():
     'R_50_2' : R_50_2,
     'sigma_psd_2' : sigma_psd_2,
     'mass_ratio_1_1and2' : mass_ratio_1_1and2,
+    'e_target' : e_target
     }
 
     #---------------------------------------------------------------------------
@@ -114,7 +115,7 @@ def All_parameters():
 
     #DEM parameters
     dt_DEM_crit = math.pi*dict_geometry['R_50']/(0.16*nu+0.88)*math.sqrt(rho*(2+2*nu)/Y) #s critical time step from O'Sullivan 2011
-    dt_DEM = dt_DEM_crit/7 #s time step during DEM simulation
+    dt_DEM = dt_DEM_crit/6 #s time step during DEM simulation
     factor_neighborhood = 1.9 #margin to detect a grain into a neighborhood
     i_update_neighborhoods = 200 #the frequency of the update of the neighborhood of the grains and the walls
     #Stop criteria of the DEM
@@ -124,7 +125,7 @@ def All_parameters():
 
     #List of plot to do
     Debug_DEM = True #plot configuration
-    i_print_plot = 100 #frenquency of the print and plot (if Debug_DEM) in DEM step
+    i_print_plot = 400 #frenquency of the print and plot (if Debug_DEM) in DEM step
 
     #Save the simulation
     SaveData = False #Save data or not
