@@ -84,7 +84,7 @@ def Plot_custom(namefile, L_data_x, L_data_y, L_label_name, L_label):
 
 #-------------------------------------------------------------------------------
 
-def Plot_DEM_trackers(namefile, Force_tracker, Ecin_tracker, Zmax_tracker, F_top_tracker):
+def Plot_DEM_trackers(namefile, Force_tracker, Ecin_tracker, Zmax_tracker, s_top_tracker):
     """
     Plot trackers from DEM during loading.
 
@@ -109,8 +109,8 @@ def Plot_DEM_trackers(namefile, Force_tracker, Ecin_tracker, Zmax_tracker, F_top
     plt.plot(Zmax_tracker)
 
     plt.subplot(224)
-    plt.title('Force on upper wall (µN)')
-    plt.plot(F_top_tracker)
+    plt.title('Vertical stress on top wall (µN)')
+    plt.plot(s_top_tracker)
 
     plt.savefig(namefile)
     plt.close(1)
