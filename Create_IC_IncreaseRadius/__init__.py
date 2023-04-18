@@ -371,7 +371,7 @@ def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollici
             if max(Ecin_tracker) != 0:
                 print('\t\tKinetic energy',str(int(100*Ecin_tracker[-1]/max(Ecin_tracker)))+'% of max reached')
             if dict_ic['Debug_DEM'] :
-                Owntools.Plot.Plot_DEM_trackers('Debug/Trackers/Init/DEM_trackers_init_'+str(dict_ic['i_generation'])+'.png', Force_tracker, Ecin_tracker, Zmax_tracker, s_top_tracker)
+                Owntools.Plot.Plot_DEM_trackers('Debug/Trackers/Init/DEM_trackers_init_'+str(dict_ic['i_generation'])+'.png', Force_tracker, Ecin_tracker, Ratio_Displacement_MeanRadius_tracker, Zmax_tracker, s_top_tracker, k0_tracker, k0_mean_tracker)
                 Owntools.Write.Write_grains_vtk('Debug/Configuration/Init/grains_'+str(dict_ic['i_DEM_IC'])+'.vtk', dict_ic['L_g_tempo'])
                 Owntools.Write.Write_box_vtk('Debug/Configuration/Init/box_'+str(dict_ic['i_DEM_IC'])+'.vtk', dict_sample)
 
