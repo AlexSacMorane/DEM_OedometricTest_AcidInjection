@@ -233,8 +233,9 @@ def Increase_radius(dict_ic, dict_material, dict_sample, simulation_report):
 
             if dict_ic['i_DEM_IC'] % dict_ic['i_print_plot_IC'] == 0:
                 print('\ti_DEM',str(dict_ic['i_DEM_IC'])+'/'+str(dict_ic['i_DEM_stop_ir']+i_DEM_0),':\n',\
-                      '\t\tMean displacement', str(int(1000*Ratio_Displacement_MeanRadius_tracker[-1]))+'‰ of mean radius\n',\
-                      '\t\tKinetic energy',str(int(100*Ecin_tracker[-1]/max(Ecin_tracker)))+'% of max reached')
+                      '\t\tMean displacement', str(int(1000*Ratio_Displacement_MeanRadius_tracker[-1]))+'‰ of mean radius')
+                if max(Ecin_tracker) != 0:
+                    print('\t\tKinetic energy',str(int(100*Ecin_tracker[-1]/max(Ecin_tracker)))+'% of max reached')
                 if dict_ic['Debug_DEM'] :
                     Owntools.Write.Write_grains_vtk('Debug/Configuration/Init/grains_'+str(dict_ic['i_DEM_IC'])+'.vtk', dict_ic['L_g_tempo'])
                     Owntools.Write.Write_box_vtk('Debug/Configuration/Init/box_'+str(dict_ic['i_DEM_IC'])+'.vtk', dict_sample)
@@ -366,7 +367,9 @@ def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollici
         if dict_ic['i_DEM_IC'] % dict_ic['i_print_plot_IC'] ==0:
             print('\ti_DEM',str(dict_ic['i_DEM_IC'])+'/'+str(dict_ic['i_DEM_stop_load']+i_DEM_0),':\n',\
                   '\t\tMean displacement', str(int(1000*Ratio_Displacement_MeanRadius_tracker[-1]))+'‰ of mean radius\n',\
-                  '\t\tKinetic energy',str(int(100*Ecin_tracker[-1]/max(Ecin_tracker)))+'% of max reached')
+                  '\t\tConfinement', str(int(100*s_top_tracker[-1]/dict_sollicitation['Vertical_Confinement_Surface_Force']))+'% of the target value')
+            if max(Ecin_tracker) != 0:
+                print('\t\tKinetic energy',str(int(100*Ecin_tracker[-1]/max(Ecin_tracker)))+'% of max reached')
             if dict_ic['Debug_DEM'] :
                 Owntools.Plot.Plot_DEM_trackers('Debug/Trackers/Init/DEM_trackers_init_'+str(dict_ic['i_generation'])+'.png', Force_tracker, Ecin_tracker, Zmax_tracker, s_top_tracker)
                 Owntools.Write.Write_grains_vtk('Debug/Configuration/Init/grains_'+str(dict_ic['i_DEM_IC'])+'.vtk', dict_ic['L_g_tempo'])
