@@ -75,10 +75,13 @@ def open_simulation():
     #prepare plot
     if dict_algorithm['Debug_DEM'] or dict_ic['Debug_DEM']:
         os.mkdir('Debug/Configuration')
+        os.mkdir('Debug/Trackers')
         if dict_ic['Debug_DEM'] :
             os.mkdir('Debug/Configuration/Init')
+            os.mkdir('Debug/Trackers/Init')
         if dict_algorithm['Debug_DEM'] :
             os.mkdir('Debug/Configuration/Main')
+            os.mkdir('Debug/Trackers/Main')
 
     return dict_algorithm, dict_geometry, dict_ic, dict_material, dict_sample, dict_sollicitation, simulation_report
 
@@ -319,7 +322,7 @@ def DEM_loading(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_
             else :
                 print('i_DEM',str(dict_algorithm['i_DEM'])+'/'+str(dict_algorithm['i_DEM_stop']+i_DEM_0),'and Ecin',int(100*Ecin/Ecin_stop),'% and Confinement',int(100*dict_sollicitation['Force_on_upper_wall']/dict_sollicitation['Vertical_Confinement_Force']),'%')
             if dict_algorithm['Debug_DEM'] :
-                Owntools.Plot.Plot_DEM_trackers('Debug/Configuration/DEM_trackers_'+str(dict_algorithm['i_dissolution'])+'.png', Force_tracker, Ecin_tracker, Zmax_tracker, s_top_tracker)
+                Owntools.Plot.Plot_DEM_trackers('Debug/Trackers/Main/DEM_trackers_'+str(dict_algorithm['i_dissolution'])+'.png', Force_tracker, Ecin_tracker, Zmax_tracker, s_top_tracker)
                 Owntools.Write.Write_grains_vtk('Debug/Configuration/Main/grains_'+str(dict_algorithm['i_DEM'])+'.vtk', dict_sample['L_g'])
                 Owntools.Write.Write_box_vtk('Debug/Configuration/Main/box_'+str(dict_algorithm['i_DEM'])+'.vtk', dict_sample)
 
