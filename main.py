@@ -339,10 +339,10 @@ def DEM_loading(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_
             k0_mean_tracker.append(np.mean(k0_tracker[-dict_algorithm['n_window']:]))
 
         if dict_algorithm['i_DEM'] % dict_algorithm['i_print_plot'] ==0:
-            if dict_sollicitation['gravity'] > 0 :
-                print('i_DEM',str(dict_algorithm['i_DEM'])+'/'+str(dict_algorithm['i_DEM_stop']+i_DEM_0),'and Ecin',int(100*Ecin/Ecin_stop),'% and Force',int(100*F/Force_stop),'% and Confinement',int(100*Fv/dict_sollicitation['Vertical_Confinement_Force']),'%')
-            else :
-                print('i_DEM',str(dict_algorithm['i_DEM'])+'/'+str(dict_algorithm['i_DEM_stop']+i_DEM_0),'and Ecin',int(100*Ecin/Ecin_stop),'% and Confinement',int(100*dict_sollicitation['Force_on_upper_wall']/dict_sollicitation['Vertical_Confinement_Force']),'%')
+            print('\ti_DEM',str(dict_ic['i_DEM_IC'])+'/'+str(dict_ic['i_DEM_stop_load']+i_DEM_0),':\n',\
+                  '\t\tMean displacement', str(int(1000*Ratio_Displacement_MeanRadius_tracker[-1]))+'‰ of mean radius\n',\
+                  '\t\tConfinement', str(int(100*s_top_tracker[-1]/dict_sollicitation['Vertical_Confinement_Surface_Force']))+'% of the target value',\
+                  '\t\tKinetic energy',str(int(100*Ecin/Ecin_stop))+'% of target value')
             if dict_algorithm['Debug_DEM'] :
                 Owntools.Plot.Plot_DEM_trackers('Debug/Trackers/Main/DEM_trackers_'+str(dict_algorithm['i_dissolution'])+'.png', Force_tracker, Ecin_tracker, Ratio_Displacement_MeanRadius_tracker, Zmax_tracker, s_top_tracker, k0_tracker, k0_mean_tracker)
                 Owntools.Write.Write_grains_vtk('Debug/Configuration/Main/grains_'+str(dict_algorithm['i_DEM'])+'.vtk', dict_sample['L_g'])
