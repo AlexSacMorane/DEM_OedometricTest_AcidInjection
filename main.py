@@ -307,9 +307,6 @@ def DEM_loading(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_
             #for the moment it is not done
 
         #Control the z_max to have the pressure target
-        #Owntools.Control_z_max_NR(dict_sample, dict_sollicitation)
-
-        #Control the z_max to have the pressure target
         #and compute k0
         Force_on_upper_wall = 0
         Force_on_lateral_wall = 0
