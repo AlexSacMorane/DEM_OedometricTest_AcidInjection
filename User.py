@@ -120,7 +120,7 @@ def All_parameters():
     i_update_neighborhoods = 200 #the frequency of the update of the neighborhood of the grains and the walls
     #Stop criteria of the DEM
     i_DEM_stop = 4000 #maximum iteration for one DEM simulation
-    Ecin_ratio = 0.0001
+    ratio_meanDisplacement_meanRadius = 0.0001
     n_window = 100
 
     #List of plot to do
@@ -148,7 +148,7 @@ def All_parameters():
     'factor_neighborhood' : factor_neighborhood,
     'i_update_neighborhoods': i_update_neighborhoods,
     'i_DEM_stop' : i_DEM_stop,
-    'Ecin_ratio' : Ecin_ratio,
+    'ratio_meanDisplacement_meanRadius' : ratio_meanDisplacement_meanRadius,
     'n_window' : n_window,
     'Debug_DEM' : Debug_DEM,
     'i_print_plot' : i_print_plot,

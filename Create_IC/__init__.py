@@ -144,7 +144,7 @@ def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollici
     s_top_tracker= []
     for grain in dict_ic['L_g_tempo']:
         Force_stop = Force_stop + 0.5*grain.mass*dict_sollicitation['gravity']
-        Ecin_stop = Ecin_stop + 0.5*grain.mass*(dict_ic['Ecin_ratio_IC']*grain.radius/dict_ic['dt_DEM_IC'])**2
+        Ecin_stop = Ecin_stop + 0.5*grain.mass*(dict_ic['ratio_meanDisplacement_meanRadius_IC']*grain.radius/dict_ic['dt_DEM_IC'])**2
 
     while DEM_loop_statut :
 
@@ -169,7 +169,7 @@ def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollici
 
         #Move grains
         for grain in dict_ic['L_g_tempo']:
-            grain.euler_semi_implicite(dict_ic['dt_DEM_IC'], 10*dict_ic['Ecin_ratio_IC'])
+            grain.euler_semi_implicite(dict_ic['dt_DEM_IC'], 10*dict_ic['ratio_meanDisplacement_meanRadius_IC'])
 
         #check if some grains are outside of the study box
         L_ig_to_delete = []

@@ -179,6 +179,7 @@ def dissolve_material(dict_geometry, dict_sample, dict_sollicitation, dict_track
 
         Input :
             a geometry dictionnary (a dict)
+            a material dictionnary (a dict)
             a sample dictionnary (a dict)
             a sollicitation dictionnary (a dict)
             a tracker dictionnary (a dict)
@@ -246,7 +247,7 @@ def DEM_loading(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_
     F_top_tracker = []
     for grain in dict_sample['L_g']:
         Force_stop = Force_stop + 0.5*grain.mass*dict_sollicitation['gravity']
-        Ecin_stop = Ecin_stop + 0.5*grain.mass*(dict_algorithm['Ecin_ratio']*grain.radius/dict_algorithm['dt_DEM'])**2
+        Ecin_stop = Ecin_stop + 0.5*grain.mass*(dict_algorithm['ratio_meanDisplacement_meanRadius']*grain.radius/dict_algorithm['dt_DEM'])**2
 
     while DEM_loop_statut :
 
