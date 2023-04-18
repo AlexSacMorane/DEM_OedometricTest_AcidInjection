@@ -234,6 +234,7 @@ def All_parameters():
         dict_ic['i_DEM_stop_ir'] = i_DEM_stop_ir
         dict_ic['i_DEM_stop_load'] = i_DEM_stop_load
         dict_ic['n_window'] = n_window
+        dict_ic['dk0_window'] = dict_algorithm['dk0_window']
 
     #---------------------------------------------------------------------------
     #update dict_algorithm with a  simulation name
