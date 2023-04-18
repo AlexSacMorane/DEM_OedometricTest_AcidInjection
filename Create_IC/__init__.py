@@ -207,7 +207,7 @@ def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollici
             else :
                 print('i_DEM',str(dict_ic['i_DEM_IC'])+'/'+str(dict_ic['i_DEM_stop_IC']+i_DEM_0),'and Ecin',int(100*Ecin/Ecin_stop),'% and Confinement',int(100*Fv/dict_sollicitation['Vertical_Confinement_Force']),'%')
             if dict_ic['Debug_DEM'] :
-                Owntools.Plot.Plot_DEM_trackers('Debug/Configuration/DEM_trackers_init_'+str(dict_ic['i_generation'])+'.png', Force_tracker, Ecin_tracker, Zmax_tracker, s_top_tracker)
+                Owntools.Plot.Plot_DEM_trackers('Debug/Trackers/Init/DEM_trackers_init_'+str(dict_ic['i_generation'])+'.png', Force_tracker, Ecin_tracker, Zmax_tracker, s_top_tracker)
                 Owntools.Write.Write_grains_vtk('Debug/Configuration/Init/grains_'+str(dict_ic['i_DEM_IC'])+'.vtk', dict_ic['L_g_tempo'])
                 Owntools.Write.Write_box_vtk('Debug/Configuration/Init/box_'+str(dict_ic['i_DEM_IC'])+'.vtk', dict_sample)
 
