@@ -217,6 +217,7 @@ def dissolve_material(dict_geometry, dict_material, dict_sample, dict_sollicitat
             #   - update L_contact_ij / L_contact_gw_ij as indentation change
             #for the moment, just undissolve the grain
         L_radius.append(grain.radius)
+    dict_sample['L_radius'] = L_radius
 
     #update dt_DEM
     dt_DEM_crit = math.pi*min(L_radius)/(0.16*dict_material['nu']+0.88)*math.sqrt(dict_material['rho']*(2+2*dict_material['nu'])/dict_material['Y']) #s critical time step from O'Sullivan 2011
@@ -254,9 +255,9 @@ def DEM_loading(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_
     Force_stop = 0
     Ecin_tracker = []
     Ecin_stop = 0
+    Ratio_Displacement_MeanRadius_tracker = []
     Zmax_tracker = []
-    s_top_tracker = []
-    F_top_tracker = []
+    s_top_tracker= []
     k0_mean_tracker = []
     for grain in dict_sample['L_g']:
         Force_stop = Force_stop + 0.5*grain.mass*dict_sollicitation['gravity']
@@ -329,6 +330,7 @@ def DEM_loading(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_
         Ecin = Owntools.Compute.Compute_E_cin_total(dict_sample['L_g'])
         Force_tracker.append(F)
         Ecin_tracker.append(Ecin)
+        Ratio_Displacement_MeanRadius_tracker.append(Owntools.Compute.Compute_mean_v(dict_sample['L_g'])*dict_algorithm['dt_DEM']/np.mean(dict_sample['L_radius']))
         Zmax_tracker.append(dict_sample['z_box_max'])
         F_top_tracker.append(dict_sollicitation['Force_on_upper_wall'])
         s_top_tracker.append(dict_sollicitation['Force_on_upper_wall']/(math.pi*dict_sample['D_oedo']**2/4))
@@ -342,7 +344,7 @@ def DEM_loading(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_
             else :
                 print('i_DEM',str(dict_algorithm['i_DEM'])+'/'+str(dict_algorithm['i_DEM_stop']+i_DEM_0),'and Ecin',int(100*Ecin/Ecin_stop),'% and Confinement',int(100*dict_sollicitation['Force_on_upper_wall']/dict_sollicitation['Vertical_Confinement_Force']),'%')
             if dict_algorithm['Debug_DEM'] :
-                Owntools.Plot.Plot_DEM_trackers('Debug/Trackers/Main/DEM_trackers_'+str(dict_algorithm['i_dissolution'])+'.png', Force_tracker, Ecin_tracker, Zmax_tracker, s_top_tracker)
+                Owntools.Plot.Plot_DEM_trackers('Debug/Trackers/Main/DEM_trackers_'+str(dict_algorithm['i_dissolution'])+'.png', Force_tracker, Ecin_tracker, Ratio_Displacement_MeanRadius_tracker, Zmax_tracker, s_top_tracker, k0_tracker, k0_mean_tracker)
                 Owntools.Write.Write_grains_vtk('Debug/Configuration/Main/grains_'+str(dict_algorithm['i_DEM'])+'.vtk', dict_sample['L_g'])
                 Owntools.Write.Write_box_vtk('Debug/Configuration/Main/box_'+str(dict_algorithm['i_DEM'])+'.vtk', dict_sample)
 
