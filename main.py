@@ -257,6 +257,7 @@ def DEM_loading(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_
     Zmax_tracker = []
     s_top_tracker = []
     F_top_tracker = []
+    k0_mean_tracker = []
     for grain in dict_sample['L_g']:
         Force_stop = Force_stop + 0.5*grain.mass*dict_sollicitation['gravity']
         Ecin_stop = Ecin_stop + 0.5*grain.mass*(dict_algorithm['ratio_meanDisplacement_meanRadius']*grain.radius/dict_algorithm['dt_DEM'])**2
@@ -305,7 +306,23 @@ def DEM_loading(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_
             #for the moment it is not done
 
         #Control the z_max to have the pressure target
-        Owntools.Control_z_max_NR(dict_sample, dict_sollicitation)
+        #Owntools.Control_z_max_NR(dict_sample, dict_sollicitation)
+
+        #Control the z_max to have the pressure target
+        #and compute k0
+        Force_on_upper_wall = 0
+        Force_on_lateral_wall = 0
+        for contact in dict_sample['L_contact_gw']:
+            if contact.nature == 'gz_max':
+                Force_on_upper_wall = Force_on_upper_wall + contact.Fwg_n
+            if contact.nature == 'gwlat':
+                Force_on_lateral_wall = Force_on_lateral_wall + contact.Fwg_n
+        dict_sample['Force_on_upper_wall'] = Force_on_upper_wall
+        dict_sample['Force_on_lateral_wall'] = Force_on_lateral_wall
+        dz_max = dict_sollicitation['kp_wall']*(Force_on_upper_wall - dict_sollicitation['Vertical_Confinement_Force'])
+        if dz_max > dict_algorithm['factor_neighborhood']*min(dict_sample['L_radius'])/dict_algorithm['i_update_neighborhoods']:
+            dz_max = np.sign(dz_max)*dict_algorithm['factor_neighborhood']*min(dict_sample['L_radius'])/dict_algorithm['i_update_neighborhoods']
+        dict_sample['z_box_max'] = dict_sample['z_box_max'] + dz_max
 
         #Tracker
         F = Owntools.Compute.Compute_F_total(dict_sample['L_g'])
@@ -315,6 +332,9 @@ def DEM_loading(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_
         Zmax_tracker.append(dict_sample['z_box_max'])
         F_top_tracker.append(dict_sollicitation['Force_on_upper_wall'])
         s_top_tracker.append(dict_sollicitation['Force_on_upper_wall']/(math.pi*dict_sample['D_oedo']**2/4))
+        k0_tracker.append(dict_sample['D_oedo']/4/(dict_sample['z_box_max']-dict_sample['z_box_min'])*dict_sollicitation['Force_on_lateral_wall']/dict_sollicitation['Force_on_upper_wall'])
+        if len(k0_tracker) >= dict_algorithm['n_window'] :
+            k0_mean_tracker.append(np.mean(k0_tracker[-dict_algorithm['n_window']:]))
 
         if dict_algorithm['i_DEM'] % dict_algorithm['i_print_plot'] ==0:
             if dict_sollicitation['gravity'] > 0 :
@@ -337,7 +357,9 @@ def DEM_loading(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_
         else:
             if Ecin < Ecin_stop and dict_algorithm['i_DEM'] >= dict_algorithm['i_DEM_stop']*0.1 + i_DEM_0 :
                 window_F_top = F_top_tracker[-dict_algorithm['n_window']:]
-                if (0.95*dict_sollicitation['Vertical_Confinement_Force']<min(window_F_top) and max(window_F_top)<1.05*dict_sollicitation['Vertical_Confinement_Force']):
+                window_k0_top = k0_tracker[-dict_algorithm['n_window']:]
+                if (0.95*dict_sollicitation['Vertical_Confinement_Force']<min(window_F_top) and max(window_F_top)<1.05*dict_sollicitation['Vertical_Confinement_Force']) and \
+                   (max(window_k0_top) - min(window_k0_top)) < dict_algorithm['dk0_window']):
                     DEM_loop_statut = False
         if dict_sample['L_g'] == []:
             DEM_loop_statut = False

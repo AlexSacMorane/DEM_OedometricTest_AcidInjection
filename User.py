@@ -125,6 +125,7 @@ def All_parameters():
     i_DEM_stop = 4000 #maximum iteration for one DEM simulation
     ratio_meanDisplacement_meanRadius = 0.0001
     n_window = 100
+    dk0_window = 0.05 #delta k0 in the window
 
     #List of plot to do
     Debug_DEM = True #plot configuration
@@ -143,6 +144,7 @@ def All_parameters():
     'i_DEM_stop' : i_DEM_stop,
     'ratio_meanDisplacement_meanRadius' : ratio_meanDisplacement_meanRadius,
     'n_window' : n_window,
+    'dk0_window' : dk0_window,
     'Debug_DEM' : Debug_DEM,
     'i_print_plot' : i_print_plot,
     'SaveData' : SaveData,
