@@ -84,33 +84,43 @@ def Plot_custom(namefile, L_data_x, L_data_y, L_label_name, L_label):
 
 #-------------------------------------------------------------------------------
 
-def Plot_DEM_trackers(namefile, Force_tracker, Ecin_tracker, Zmax_tracker, s_top_tracker):
+def Plot_DEM_trackers(namefile, Force_tracker, Ecin_tracker, Ratio_Displacement_MeanRadius_tracker, Zmax_tracker, s_top_tracker, k0_tracker, k0_mean_tracker):
     """
     Plot trackers from DEM during loading.
 
         Input :
             a namefile (a str)
-            four lists of tracker (lists)
+            trackers (lists)
         Output :
             Nothing, but a .png file is generated (a file)
     """
     plt.figure(1,figsize=(16,9))
 
-    plt.subplot(221)
+    plt.subplot(231)
     plt.title('Force applied on particles (µN)')
     plt.plot(Force_tracker)
 
-    plt.subplot(222)
-    plt.title('Kinetic energy of particles (10-12 J)')
+    plt.subplot(232)
+    plt.title('Kinetic energy of particles (10e-12 J)')
     plt.plot(Ecin_tracker)
 
-    plt.subplot(223)
+    plt.subplot(233)
+    plt.title('Mean displacement / Mean radius (-)')
+    plt.plot(Ratio_Displacement_MeanRadius_tracker)
+
+    plt.subplot(234)
     plt.title('Upper wall position (µm)')
     plt.plot(Zmax_tracker)
 
-    plt.subplot(224)
+    plt.subplot(235)
     plt.title('Vertical stress on top wall (µN)')
     plt.plot(s_top_tracker)
+
+    plt.subplot(236)
+    plt.title('k0 = sII/sI (-)')
+    plt.plot(k0_tracker, label = 'current')
+    plt.plot(range(len(k0_tracker)-len(k0_mean_tracker),len(k0_tracker)),k0_mean_tracker, label = 'mean in the window')
+    plt.legend()
 
     plt.savefig(namefile)
     plt.close(1)
