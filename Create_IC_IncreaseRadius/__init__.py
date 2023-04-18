@@ -22,6 +22,7 @@ import Create_IC_IncreaseRadius.Contact_gw_ic
 import Grain
 import Owntools.Write
 import Owntools.Plot
+import Owntools.Save
 
 #-------------------------------------------------------------------------------
 #Function
@@ -86,6 +87,9 @@ def LG_tempo(dict_geometry, dict_ic, dict_material, dict_sample, dict_sollicitat
     for L_g_tempo in dict_ic['L_L_g_tempo']:
         for g_tempo in L_g_tempo:
             dict_ic['L_g_tempo'].append(g_tempo)
+            
+    #save
+    Owntools.Save.save_dicts_ic('Dicts/save_ic_before_loading', dict_algorithm, dict_geometry, dict_ic, dict_material, dict_sample, dict_sollicitation, simulation_report)
 
     DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollicitation, simulation_report)
 
