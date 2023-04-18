@@ -133,16 +133,6 @@ def All_parameters():
     #Save the simulation
     SaveData = False #Save data or not
     foldername = 'Data_Oedo_Acid' #name of the folder where data are saved
-    template = 'Run' #template of the name of the simulation
-    if SaveData :
-        i_run = 1
-        folderpath = Path('../'+foldername+'/'+template+'_'+str(i_run))
-        while folderpath.exists():
-            i_run = i_run + 1
-            folderpath = Path('../'+foldername+'/'+template+'_'+str(i_run))
-        namefile = template+'_'+str(i_run)
-    else :
-        namefile = template
 
     dict_algorithm = {
     'n_dissolution' : n_dissolution,
@@ -157,7 +147,6 @@ def All_parameters():
     'i_print_plot' : i_print_plot,
     'SaveData' : SaveData,
     'foldername' : foldername,
-    'namefile' : namefile,
     }
 
     #---------------------------------------------------------------------------
@@ -247,6 +236,24 @@ def All_parameters():
         dict_ic['n_window'] = n_window
 
     #---------------------------------------------------------------------------
+    #update dict_algorithm with a  simulation name
+
+    if SaveData :
+        #template of the name of the simulation
+        template = 'PSD1_'+str(int(R_50_1))+'_'+str(int(sigma_psd_1))+'_'+\
+                   'PSD2_'+str(int(R_50_2))+'_'+str(int(sigma_psd_2))+'_'+\
+                   '1_1and2_'+str(int(100*mass_ratio_1_1and2))+'_'+\
+                   'e_'+str(int(100*e_target))+'_'+\
+                   'sv_'+str(int(Vertical_Confinement_Surface_Force*10**3))
+        i_run = 1
+        folderpath = Path('../'+foldername+'/'+template+'_'+str(i_run))
+        while folderpath.exists():
+            i_run = i_run + 1
+            folderpath = Path('../'+foldername+'/'+template+'_'+str(i_run))
+        namefile = template+'_'+str(i_run)
+    else :
+        namefile = 'Run_not_saved'
+    dict_algorithm['namefile'] = namefile
 
     return dict_algorithm, dict_geometry, dict_ic, dict_material, dict_sample, dict_sollicitation
 
