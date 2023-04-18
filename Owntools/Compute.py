@@ -173,3 +173,19 @@ def Compute_E_cin_total(L_g):
     for grain in L_g:
         Ecin = Ecin + 1/2*grain.mass*np.dot(grain.v,grain.v)
     return Ecin
+
+#-------------------------------------------------------------------------------
+
+def Compute_mean_v(L_g):
+    """
+    Compute a mean grain velocity.
+
+        Input :
+            a list of grains (a list)
+        Output :
+            a mean velocity (a float)
+    """
+    mean_v = 0
+    for grain in L_g:
+        mean_v = mean_v + np.linalg.norm(grain.v)
+    return mean_v/len(L_g)
