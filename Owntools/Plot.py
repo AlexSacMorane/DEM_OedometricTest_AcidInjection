@@ -114,3 +114,32 @@ def Plot_DEM_trackers(namefile, Force_tracker, Ecin_tracker, Zmax_tracker, s_top
 
     plt.savefig(namefile)
     plt.close(1)
+
+#-------------------------------------------------------------------------------
+
+def Plot_ir_trackers(namefile, Ecin_tracker, Ratio_Displacement_MeanRadius_tracker, n_contact_tracker):
+    """
+    Plot trackers from DEM during the radius expansion.
+
+        Input :
+            a namefile (a str)
+            trackers (lists)
+        Output :
+            Nothing, but a .png file is generated (a file)
+    """
+    plt.figure(1,figsize=(16,9))
+
+    plt.subplot(131)
+    plt.title('Kinetic energy of particles (10-12 J)')
+    plt.plot(Ecin_tracker)
+
+    plt.subplot(132)
+    plt.title('Mean Displacement / Mean Radius (-)')
+    plt.plot(Ratio_Displacement_MeanRadius_tracker)
+
+    plt.subplot(133)
+    plt.title('Number of contacts (-)')
+    plt.plot(n_contact_tracker)
+
+    plt.savefig(namefile)
+    plt.close(1)

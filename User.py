@@ -79,7 +79,10 @@ def All_parameters():
 
     #Box définition
     z_box_min = 0 #µm
-    D_oedo = (dict_geometry['N_grain']*14)**(1/3)*dict_geometry['R_50'] #µm the diameter of the oedometer
+    #for deposition as IC
+    #D_oedo = (dict_geometry['N_grain']*14)**(1/3)*dict_geometry['R_50'] #µm the diameter of the oedometer
+    #for radius expansion as IC
+    D_oedo = (dict_geometry['N_grain']*80/e_target/9)**(1/3)*dict_geometry['R_50'] #µm the diameter of the oedometer
 
     dict_sample = {
     'z_box_min' : z_box_min,
@@ -164,50 +167,84 @@ def All_parameters():
     Vertical_Confinement_Surface_Force = 100*10**-3 #µN/µm2 used to compute the Vertical_Confinement_Force
     Vertical_Confinement_Force = Vertical_Confinement_Surface_Force*(math.pi*D_oedo**2/4) #µN
     f_R50_0_dissolved = 0.005 #fraction of the initial mean radius dissolved
+    kp_wall = 1 #proportionnal coefficient to apply confinement pressure
 
     dict_sollicitation = {
     'gravity' : gravity,
+    'Vertical_Confinement_Surface_Force' : Vertical_Confinement_Surface_Force,
     'Vertical_Confinement_Force' : Vertical_Confinement_Force,
-    'f_R50_0_dissolved' : f_R50_0_dissolved
+    'f_R50_0_dissolved' : f_R50_0_dissolved,
+    'kp_wall' : kp_wall
     }
 
     #---------------------------------------------------------------------------
     #Initial condition parameters
 
     #method to generate ic
-    method_ic = 'Deposition' #IncreaseRadius or Deposition
+    method_ic = 'IncreaseRadius' #IncreaseRadius or Deposition
 
-    n_generation = 5 #number of grains generation
-    factor_zmax_box = 2 #margin to generate grains (Deposition)
-    N_test_max = 5000 # maximum number of tries to generate a grain without overlap
-    i_DEM_stop_IC = 5000 #stop criteria for DEM during IC
+    #common option
+    n_generation = 1 #number of grains generation
     Debug_DEM_IC = True #plot configuration inside DEM during IC
-    i_print_plot_IC = 300 #frenquency of the print and plot (if Debug_DEM_IC) for IC
-    dt_DEM_IC = dt_DEM_crit/5 #s time step during IC
-    n_window = 100 #window to detect the steady-state
-    Ecin_ratio_IC = 0.0005 #criteria on kinetic energy to detect the steady-state
-    factor_neighborhood_IC = 1.5 #margin to detect a grain into a neighborhood
-    i_update_neighborhoods_gen = 50 #the frequency of the update of the neighborhood of the grains and the walls during IC generations
-    i_update_neighborhoods_com = 200 #the frequency of the update of the neighborhood of the grains and the walls during IC combination
-    gravity = 100*N_grain/n_generation*(factor_zmax_box)*dict_geometry['R_50']**3/D_oedo**2/i_DEM_stop_IC**2/dt_DEM_IC**2 #apply only in the ic phase with one generation µm/s2
+    i_print_plot_IC = 200 #frenquency of the print and plot (if Debug_DEM_IC) for IC
 
     #write dict
     dict_ic = {
     'method_ic' : method_ic,
     'n_generation' : n_generation,
-    'factor_zmax_box' : factor_zmax_box,
-    'N_test_max' : N_test_max,
-    'i_DEM_stop_IC' : i_DEM_stop_IC,
     'Debug_DEM' : Debug_DEM_IC,
-    'i_print_plot_IC' : i_print_plot_IC,
-    'dt_DEM_IC' : dt_DEM_IC,
-    'n_window' : n_window,
-    'Ecin_ratio_IC' : Ecin_ratio_IC,
-    'factor_neighborhood_IC' : factor_neighborhood_IC,
-    'i_update_neighborhoods_gen': i_update_neighborhoods_gen,
-    'i_update_neighborhoods_com': i_update_neighborhoods_com,
-    'gravity' : gravity
+    'i_print_plot_IC' : i_print_plot_IC
     }
+
+    #Deposition
+    if method_ic == 'Deposition':
+        factor_zmax_box = 2 #margin to generate grains (Deposition)
+        N_test_max = 5000 # maximum number of tries to generate a grain without overlap
+        i_DEM_stop_IC = 5000 #stop criteria for DEM during IC
+        dt_DEM_IC = dt_DEM_crit/5 #s time step during IC
+        n_window = 100 #window to detect the steady-state
+        ratio_meanDisplacement_meanRadius_IC = 0.0005 #criteria on kinetic energy to detect the steady-state
+        factor_neighborhood_IC = 1.8 #margin to detect a grain into a neighborhood
+        i_update_neighborhoods_gen = 50 #the frequency of the update of the neighborhood of the grains and the walls during IC generations
+        i_update_neighborhoods_com = 200 #the frequency of the update of the neighborhood of the grains and the walls during IC combination
+        gravity = 100*N_grain/n_generation*(factor_zmax_box)*dict_geometry['R_50']**3/D_oedo**2/i_DEM_stop_IC**2/dt_DEM_IC**2 #apply only in the ic phase with one generation µm/s2
+
+        #add element
+        dict_ic['factor_zmax_box'] = factor_zmax_box
+        dict_ic['N_test_max'] = N_test_max
+        dict_ic['i_DEM_stop_IC'] = i_DEM_stop_IC
+        dict_ic['dt_DEM_IC'] = dt_DEM_IC
+        dict_ic['n_window'] = n_window
+        dict_ic['ratio_meanDisplacement_meanRadius_IC'] = ratio_meanDisplacement_meanRadius_IC
+        dict_ic['factor_neighborhood_IC'] = factor_neighborhood_IC
+        dict_ic['i_update_neighborhoods_gen'] = i_update_neighborhoods_gen
+        dict_ic['i_update_neighborhoods_com'] = i_update_neighborhoods_com
+        dict_ic['gravity'] = gravity
+
+    #IncreaseRadius
+    if method_ic == 'IncreaseRadius' :
+        n_step_increase_radius = 50 #number of step to increase the radius
+        i_update_neighborhoods_ir = 50 #frequency of the update of the wall_neighborhood of the grains and wall during the step of radius increase
+        factor_neighborhood_ir = 1.5 #margin to detect a grain into a neighborhood
+        ratio_Ecin_maxEcin_ir = 0.3 # criteria on kinetic energy to detect the steady-state, fraction of the maximum kinetic energy reached
+        i_DEM_stop_ir = 1000 #stop criteria for DEM during the step of radius increase
+        i_update_neighborhoods_load = 50 #frequency of the update of the wall_neighborhood of the grains and wall during the step of loading
+        factor_neighborhood_load = 3 #margin to detect a grain into a neighborhood
+        ratio_meanDisplacement_meanRadius_load = 0.0005 #criteria on kinetic energy to detect the steady-state
+        i_DEM_stop_load = 5000 #stop criteria for DEM during the step of loading
+        n_window = 100 #window to detect the steady-state
+
+        #add element
+        dict_ic['n_step_increase_radius'] = n_step_increase_radius
+        dict_ic['i_update_neighborhoods_ir'] = i_update_neighborhoods_ir
+        dict_ic['i_update_neighborhoods_load'] = i_update_neighborhoods_load
+        dict_ic['factor_neighborhood_ir'] = factor_neighborhood_ir
+        dict_ic['factor_neighborhood_load'] = factor_neighborhood_load
+        dict_ic['ratio_Ecin_maxEcin_ir'] = ratio_Ecin_maxEcin_ir
+        dict_ic['ratio_meanDisplacement_meanRadius_load'] = ratio_meanDisplacement_meanRadius_load
+        dict_ic['i_DEM_stop_ir'] = i_DEM_stop_ir
+        dict_ic['i_DEM_stop_load'] = i_DEM_stop_load
+        dict_ic['n_window'] = n_window
 
     #---------------------------------------------------------------------------
 
