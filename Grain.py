@@ -55,22 +55,19 @@ class Grain:
 
     #-------------------------------------------------------------------------------
 
-    def euler_semi_implicite(self, dt_DEM, factor):
+    def euler_semi_implicite(self, dt_DEM):
         """
         Move the grain following a semi implicit euler scheme.
 
             Input :
                 itself (a grain)
                 a time step (a float)
-                a factor to limite the displacement (a float)
             Output :
                 Nothing, but the grain is moved
         """
         #translation
         a_i = np.array([self.fx, self.fy, self.fz])/self.mass
         self.v = self.v + a_i*dt_DEM
-        if np.linalg.norm(self.v) > self.radius*factor/dt_DEM: #limitation of the speed
-            self.v = self.v * self.radius*factor/dt_DEM/np.linalg.norm(self.v)
         self.center = self.center + self.v*dt_DEM
 
         #rotation

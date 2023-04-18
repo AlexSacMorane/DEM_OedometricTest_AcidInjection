@@ -272,7 +272,7 @@ def DEM_loading(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_
 
         #Move grains
         for grain in dict_sample['L_g']:
-            grain.euler_semi_implicite(dict_algorithm['dt_DEM'], 10*dict_algorithm['Ecin_ratio'])
+            grain.euler_semi_implicite(dict_algorithm['dt_DEM'])
 
         #check if some grains are outside of the study box
         L_ig_to_delete = []
