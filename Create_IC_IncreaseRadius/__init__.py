@@ -87,7 +87,7 @@ def LG_tempo(dict_geometry, dict_ic, dict_material, dict_sample, dict_sollicitat
     for L_g_tempo in dict_ic['L_L_g_tempo']:
         for g_tempo in L_g_tempo:
             dict_ic['L_g_tempo'].append(g_tempo)
-            
+
     #save
     Owntools.Save.save_dicts_ic('Dicts/save_ic_before_loading', dict_algorithm, dict_geometry, dict_ic, dict_material, dict_sample, dict_sollicitation, simulation_report)
 
@@ -156,7 +156,7 @@ def Increase_radius(dict_ic, dict_material, dict_sample, simulation_report):
     L_n_contact_tracker = []
 
     for i in range(1,dict_ic['n_step_increase_radius']+1):
-        simulation_report.write_and_print('Radius increase '+str(i)+'/'+str(dict_ic['n_step_increase_radius'])+'\n','Radius increase '+str(i)+'/'+str(dict_ic['n_step_increase_radius']))
+        print('Radius increase '+str(i)+'/'+str(dict_ic['n_step_increase_radius']))
 
         #increae radius and update properties
         L_radius = []
