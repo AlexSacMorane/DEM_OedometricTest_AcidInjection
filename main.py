@@ -29,6 +29,10 @@ import Create_IC
 import Create_IC.Grain_ic
 import Create_IC.Contact_gg_ic
 import Create_IC.Contact_gw_ic
+import Create_IC_IncreaseRadius
+import Create_IC_IncreaseRadius.Grain_ic
+import Create_IC_IncreaseRadius.Contact_gg_ic
+import Create_IC_IncreaseRadius.Contact_gw_ic
 import User
 import Report
 
@@ -96,7 +100,12 @@ def create_ic(dict_geometry, dict_ic, dict_material, dict_sample, dict_sollicita
     """
     simulation_report.tic_tempo()
     #create the initial configuration
-    Create_IC.LG_tempo(dict_geometry, dict_ic, dict_material, dict_sample, dict_sollicitation, simulation_report)
+    if dict_ic['method_ic'] == 'Deposition' :
+        Create_IC.LG_tempo(dict_geometry, dict_ic, dict_material, dict_sample, dict_sollicitation, simulation_report)
+    elif dict_ic['method_ic'] == 'IncreaseRadius':
+        Create_IC_IncreaseRadius.LG_tempo(dict_geometry, dict_ic, dict_material, dict_sample, dict_sollicitation, simulation_report)
+    else :
+        raise ValueError('IC generation method is not available...')
 
     #Convert the tempo grain to real grain
     Create_IC.From_LG_tempo_to_usable(dict_ic, dict_sample)
@@ -173,7 +182,7 @@ def main_simulation(dict_algorithm, dict_geometry, dict_material, dict_sample, d
 
 #-------------------------------------------------------------------------------
 
-def dissolve_material(dict_geometry, dict_sample, dict_sollicitation, dict_tracker, simulation_report):
+def dissolve_material(dict_geometry, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report):
     """
     Dissolve the granular material.
 
@@ -207,8 +216,8 @@ def dissolve_material(dict_geometry, dict_sample, dict_sollicitation, dict_track
         L_radius.append(grain.radius)
 
     #update dt_DEM
-    dt_DEM_crit = math.pi*min(L_radius)/(0.16*nu+0.88)*math.sqrt(rho*(2+2*nu)/Y) #s critical time step from O'Sullivan 2011
-    dt_DEM = dt_DEM_crit/3 #s time step during DEM simulation
+    dt_DEM_crit = math.pi*min(L_radius)/(0.16*dict_material['nu']+0.88)*math.sqrt(dict_material['rho']*(2+2*dict_material['nu'])/dict_material['Y']) #s critical time step from O'Sullivan 2011
+    dt_DEM = dt_DEM_crit/5 #s time step during DEM simulation
     dict_algorithm['dt_DEM'] = dt_DEM
 
     #compute mass
