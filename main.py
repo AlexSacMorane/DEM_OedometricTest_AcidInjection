@@ -106,7 +106,7 @@ def create_ic(dict_geometry, dict_ic, dict_material, dict_sample, dict_sollicita
     if dict_ic['method_ic'] == 'Deposition' :
         Create_IC.LG_tempo(dict_geometry, dict_ic, dict_material, dict_sample, dict_sollicitation, simulation_report)
     elif dict_ic['method_ic'] == 'IncreaseRadius':
-        Create_IC_IncreaseRadius.LG_tempo(dict_geometry, dict_ic, dict_material, dict_sample, dict_sollicitation, simulation_report)
+        Create_IC_IncreaseRadius.LG_tempo(dict_algorithm, dict_geometry, dict_ic, dict_material, dict_sample, dict_sollicitation, simulation_report)
     else :
         raise ValueError('IC generation method is not available...')
 

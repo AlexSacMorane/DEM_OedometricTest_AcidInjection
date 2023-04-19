@@ -28,7 +28,7 @@ import Owntools.Save
 #Function
 #-------------------------------------------------------------------------------
 
-def LG_tempo(dict_geometry, dict_ic, dict_material, dict_sample, dict_sollicitation, simulation_report):
+def LG_tempo(dict_algorithm, dict_geometry, dict_ic, dict_material, dict_sample, dict_sollicitation, simulation_report):
     """
     Create an initial condition
 
