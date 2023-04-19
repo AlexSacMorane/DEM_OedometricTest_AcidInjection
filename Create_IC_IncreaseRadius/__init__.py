@@ -91,8 +91,12 @@ def LG_tempo(dict_algorithm, dict_geometry, dict_ic, dict_material, dict_sample,
     #save
     Owntools.Save.save_dicts_ic('Dicts/save_ic_before_loading', dict_algorithm, dict_geometry, dict_ic, dict_material, dict_sample, dict_sollicitation, simulation_report)
 
+    print('Calm down grains')
+
     #grains calm down
     DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollicitation, False, simulation_report)
+
+    print('Apply load')
 
     #apply load
     dict_ic['i_generation'] = dict_ic['n_generation']+1
