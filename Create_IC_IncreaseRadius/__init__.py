@@ -401,7 +401,7 @@ def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollici
                 window_s_top = s_top_tracker[-dict_ic['n_window']:]
                 window_k0_top = k0_tracker[-dict_ic['n_window']:]
                 if (0.95*dict_sollicitation['Vertical_Confinement_Surface_Force']<min(window_s_top) and max(window_s_top)<1.05*dict_sollicitation['Vertical_Confinement_Surface_Force']) and \
-                   (max(window_k0_top) - min(window_k0_top)) < dict_ic['dk0_window']):
+                   (max(window_k0_top) - min(window_k0_top) < dict_ic['dk0_window']):
                     DEM_loop_statut = False
         if dict_ic['L_g_tempo'] == []:
             DEM_loop_statut = False

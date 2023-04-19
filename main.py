@@ -358,7 +358,7 @@ def DEM_loading(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_
                 window_F_top = F_top_tracker[-dict_algorithm['n_window']:]
                 window_k0_top = k0_tracker[-dict_algorithm['n_window']:]
                 if (0.95*dict_sollicitation['Vertical_Confinement_Force']<min(window_F_top) and max(window_F_top)<1.05*dict_sollicitation['Vertical_Confinement_Force']) and \
-                   (max(window_k0_top) - min(window_k0_top)) < dict_algorithm['dk0_window']):
+                   (max(window_k0_top) - min(window_k0_top) < dict_algorithm['dk0_window']):
                     DEM_loop_statut = False
         if dict_sample['L_g'] == []:
             DEM_loop_statut = False
