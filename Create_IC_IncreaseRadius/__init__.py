@@ -91,7 +91,12 @@ def LG_tempo(dict_algorithm, dict_geometry, dict_ic, dict_material, dict_sample,
     #save
     Owntools.Save.save_dicts_ic('Dicts/save_ic_before_loading', dict_algorithm, dict_geometry, dict_ic, dict_material, dict_sample, dict_sollicitation, simulation_report)
 
-    DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollicitation, simulation_report)
+    #grains calm down
+    DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollicitation, False, simulation_report)
+
+    #apply load
+    dict_ic['i_generation'] = dict_ic['n_generation']+1
+    DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollicitation, True, simulation_report)
 
     simulation_report.write_and_print(str(len(dict_ic['L_g_tempo']))+'/'+str(dict_geometry['N_grain'])+' grains have been created\n','\n'+str(len(dict_ic['L_g_tempo']))+' / '+str(dict_geometry['N_grain'])+' grains have been created')
     simulation_report.write_and_print('H/D = '+str(round((dict_sample['z_box_max']-dict_sample['z_box_min'])/dict_sample['D_oedo'],2))+'\n','H/D = '+str(round((dict_sample['z_box_max']-dict_sample['z_box_min'])/dict_sample['D_oedo'],2)))
@@ -258,7 +263,7 @@ def Increase_radius(dict_ic, dict_material, dict_sample, simulation_report):
 
 #-------------------------------------------------------------------------------
 
-def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollicitation, simulation_report):
+def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollicitation, control_z_max, simulation_report):
     """
     Loading the granular system.
 
@@ -356,13 +361,15 @@ def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollici
         Force_on_upper_wall = 0
         Force_on_lateral_wall = 0
         for contact in dict_ic['L_contact_gw']:
-            if contact.nature == 'gz_max':
+            if contact.nature == 'gwz_max':
                 Force_on_upper_wall = Force_on_upper_wall + contact.Fwg_n
             if contact.nature == 'gwlat':
                 Force_on_lateral_wall = Force_on_lateral_wall + contact.Fwg_n
         dz_max = dict_sollicitation['kp_wall']*(Force_on_upper_wall - dict_sollicitation['Vertical_Confinement_Force'])
-        if dz_max > dict_ic['factor_neighborhood_load']*min(L_radius)/dict_ic['i_update_neighborhoods_load']:
+        if abs(dz_max) > dict_ic['factor_neighborhood_load']*min(L_radius)/dict_ic['i_update_neighborhoods_load']:
             dz_max = np.sign(dz_max)*dict_ic['factor_neighborhood_load']*min(L_radius)/dict_ic['i_update_neighborhoods_load']
+        if not control_z_max:
+            dz_max = 0
         dict_sample['z_box_max'] = dict_sample['z_box_max'] + dz_max
 
         #Tracker
@@ -400,8 +407,11 @@ def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollici
             if Ecin < Ecin_stop and dict_ic['i_DEM_IC'] >= dict_ic['i_DEM_stop_load']*0.5 + i_DEM_0 :
                 window_s_top = s_top_tracker[-dict_ic['n_window']:]
                 window_k0_top = k0_tracker[-dict_ic['n_window']:]
-                if (0.95*dict_sollicitation['Vertical_Confinement_Surface_Force']<min(window_s_top) and max(window_s_top)<1.05*dict_sollicitation['Vertical_Confinement_Surface_Force']) and \
-                   (max(window_k0_top) - min(window_k0_top) < dict_ic['dk0_window']):
+                if control_z_max :
+                    if (0.95*dict_sollicitation['Vertical_Confinement_Surface_Force']<min(window_s_top) and max(window_s_top)<1.05*dict_sollicitation['Vertical_Confinement_Surface_Force']) and \
+                       (max(window_k0_top) - min(window_k0_top) < dict_ic['dk0_window']):
+                        DEM_loop_statut = False
+                else :
                     DEM_loop_statut = False
         if dict_ic['L_g_tempo'] == []:
             DEM_loop_statut = False
