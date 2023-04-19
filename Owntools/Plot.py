@@ -113,7 +113,7 @@ def Plot_DEM_trackers(namefile, Force_tracker, Ecin_tracker, Ratio_Displacement_
     plt.plot(Zmax_tracker)
 
     plt.subplot(235)
-    plt.title('Vertical stress on top wall (µN)')
+    plt.title('Vertical stress on top wall (µN/µm2)')
     plt.plot(s_top_tracker)
 
     plt.subplot(236)
