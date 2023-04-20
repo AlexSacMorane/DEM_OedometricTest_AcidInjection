@@ -79,9 +79,7 @@ def LG_tempo(dict_algorithm, dict_geometry, dict_ic, dict_material, dict_sample,
 
     #---------------------------------------------------------------------------
 
-    print('Combine generations of grains')
-
-    dict_ic['i_generation'] = dict_ic['n_generation']+1
+    print('\nCombine generations of grains')
 
     dict_ic['L_g_tempo'] = []
     for L_g_tempo in dict_ic['L_L_g_tempo']:
@@ -89,17 +87,19 @@ def LG_tempo(dict_algorithm, dict_geometry, dict_ic, dict_material, dict_sample,
             dict_ic['L_g_tempo'].append(g_tempo)
 
     #save
-    Owntools.Save.save_dicts_ic('Dicts/save_ic_before_loading', dict_algorithm, dict_geometry, dict_ic, dict_material, dict_sample, dict_sollicitation, simulation_report)
-
-    print('Calm down grains')
+    Owntools.Save.save_dicts_ic('Dicts/save_ic_before_calming_down', dict_algorithm, dict_geometry, dict_ic, dict_material, dict_sample, dict_sollicitation, simulation_report)
 
     #grains calm down
+    print('\nCalm down grains')
+    dict_ic['i_generation'] = dict_ic['n_generation']+1
     DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollicitation, False, simulation_report)
 
-    print('Apply load')
+    #save
+    Owntools.Save.save_dicts_ic('Dicts/save_ic_before_loading', dict_algorithm, dict_geometry, dict_ic, dict_material, dict_sample, dict_sollicitation, simulation_report)
 
     #apply load
-    dict_ic['i_generation'] = dict_ic['n_generation']+1
+    print('\nApply load')
+    dict_ic['i_generation'] = dict_ic['n_generation']+2
     DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollicitation, True, simulation_report)
 
     simulation_report.write_and_print(str(len(dict_ic['L_g_tempo']))+'/'+str(dict_geometry['N_grain'])+' grains have been created\n','\n'+str(len(dict_ic['L_g_tempo']))+' / '+str(dict_geometry['N_grain'])+' grains have been created')
@@ -283,7 +283,7 @@ def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollici
     """
     #-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
     #load data needed
-    if dict_ic['i_generation'] == dict_ic['n_generation']+1 :
+    if dict_ic['i_generation'] >= dict_ic['n_generation']+1:
         z_min = dict_sample['z_box_min']
     else :
         z_min = dict_sample['z_box_min_ic']
@@ -395,7 +395,10 @@ def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollici
             if max(Ecin_tracker) != 0:
                 print('\t\tKinetic energy',str(int(100*Ecin_tracker[-1]/max(Ecin_tracker)))+'% of max reached')
             if dict_ic['Debug_DEM'] :
-                Owntools.Plot.Plot_DEM_trackers('Debug/Trackers/Init/DEM_trackers_init_'+str(dict_ic['i_generation'])+'.png', Force_tracker, Ecin_tracker, Ratio_Displacement_MeanRadius_tracker, Zmax_tracker, s_top_tracker, k0_tracker, k0_mean_tracker)
+                if not control_z_max :
+                    Owntools.Plot.Plot_DEM_trackers('Debug/Trackers/Init/DEM_trackers_init_calming_down.png', Force_tracker, Ecin_tracker, Ratio_Displacement_MeanRadius_tracker, Zmax_tracker, s_top_tracker, k0_tracker, k0_mean_tracker)
+                else :
+                    Owntools.Plot.Plot_DEM_trackers('Debug/Trackers/Init/DEM_trackers_init_loading.png', Force_tracker, Ecin_tracker, Ratio_Displacement_MeanRadius_tracker, Zmax_tracker, s_top_tracker, k0_tracker, k0_mean_tracker)
                 Owntools.Write.Write_grains_vtk('Debug/Configuration/Init/grains_'+str(dict_ic['i_DEM_IC'])+'.vtk', dict_ic['L_g_tempo'])
                 Owntools.Write.Write_box_vtk('Debug/Configuration/Init/box_'+str(dict_ic['i_DEM_IC'])+'.vtk', dict_sample)
 
@@ -408,7 +411,7 @@ def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollici
                 if (0.95*dict_sollicitation['Vertical_Confinement_Surface_Force']<min(window_s_top) and max(window_s_top)<1.05*dict_sollicitation['Vertical_Confinement_Surface_Force']):
                     DEM_loop_statut = False
         else:
-            if Ecin < Ecin_stop and dict_ic['i_DEM_IC'] >= dict_ic['i_DEM_stop_load']*0.5 + i_DEM_0 :
+            if Ecin < Ecin_stop and dict_ic['i_DEM_IC'] >= dict_ic['i_DEM_stop_load']*0.1 + i_DEM_0 :
                 window_s_top = s_top_tracker[-dict_ic['n_window']:]
                 window_k0_top = k0_tracker[-dict_ic['n_window']:]
                 if control_z_max :
@@ -419,6 +422,7 @@ def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollici
                     DEM_loop_statut = False
         if dict_ic['L_g_tempo'] == []:
             DEM_loop_statut = False
+
 
 #-------------------------------------------------------------------------------
 
