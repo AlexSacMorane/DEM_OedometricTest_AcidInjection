@@ -180,7 +180,7 @@ def Increase_radius(dict_ic, dict_material, dict_sample, simulation_report):
 
         #update dt_DEM
         dt_DEM_crit = math.pi*min(L_radius)/(0.16*dict_material['nu']+0.88)*math.sqrt(dict_material['rho']*(2+2*dict_material['nu'])/dict_material['Y']) #s critical time step from O'Sullivan 2011
-        dt_DEM = dt_DEM_crit/5 #s time step during DEM simulation
+        dt_DEM = dt_DEM_crit/dict_ic['ratio_dt_DEM_crit_dt_DEM'] #s time step during DEM simulation
         dict_ic['dt_DEM_IC'] = dt_DEM
 
         #Initialisation
@@ -304,7 +304,7 @@ def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollici
     for grain in dict_ic['L_g_tempo']:
         L_radius.append(grain.radius)
     dt_DEM_crit = math.pi*min(L_radius)/(0.16*dict_material['nu']+0.88)*math.sqrt(dict_material['rho']*(2+2*dict_material['nu'])/dict_material['Y']) #s critical time step from O'Sullivan 2011
-    dt_DEM = dt_DEM_crit/5 #s time step during DEM simulation
+    dt_DEM = dt_DEM_crit/dict_ic['ratio_dt_DEM_crit_dt_DEM'] #s time step during DEM simulation
     dict_ic['dt_DEM_IC'] = dt_DEM
 
     #trackers and stop conditions

@@ -117,8 +117,7 @@ def All_parameters():
     f_mass0_dissolved_mas = 0.5 #maximum of the initial mass dissolved
 
     #DEM parameters
-    dt_DEM_crit = math.pi*dict_geometry['R_50']/(0.16*nu+0.88)*math.sqrt(rho*(2+2*nu)/Y) #s critical time step from O'Sullivan 2011
-    dt_DEM = dt_DEM_crit/6 #s time step during DEM simulation
+    ratio_dt_DEM_crit_dt_DEM = 5 #divide the critical time step to compute a time step
     factor_neighborhood = 1.9 #margin to detect a grain into a neighborhood
     i_update_neighborhoods = 200 #the frequency of the update of the neighborhood of the grains and the walls
     #Stop criteria of the DEM
@@ -138,7 +137,7 @@ def All_parameters():
     dict_algorithm = {
     'n_dissolution' : n_dissolution,
     'f_mass0_dissolved_mas' : f_mass0_dissolved_mas,
-    'dt_DEM' : dt_DEM,
+    'ratio_dt_DEM_crit_dt_DEM' : ratio_dt_DEM_crit_dt_DEM,
     'factor_neighborhood' : factor_neighborhood,
     'i_update_neighborhoods': i_update_neighborhoods,
     'i_DEM_stop' : i_DEM_stop,
@@ -215,18 +214,22 @@ def All_parameters():
     #IncreaseRadius
     if method_ic == 'IncreaseRadius' :
         n_step_increase_radius = 25 #number of step to increase the radius
+        ratio_dt_DEM_crit_dt_DEM_ir = 4 #divide the critical time step to compute a time step during radius expansion
         i_update_neighborhoods_ir = 50 #frequency of the update of the wall_neighborhood of the grains and wall during the step of radius increase
         factor_neighborhood_ir = 1.5 #margin to detect a grain into a neighborhood
         ratio_Ecin_maxEcin_ir = 0.3 # criteria on kinetic energy to detect the steady-state, fraction of the maximum kinetic energy reached
         i_DEM_stop_ir = 1000 #stop criteria for DEM during the step of radius increase
-        i_update_neighborhoods_load = 200 #frequency of the update of the wall_neighborhood of the grains and wall during the step of loading
-        factor_neighborhood_load = 3 #margin to detect a grain into a neighborhood
+        ratio_dt_DEM_crit_dt_DEM_load = 5 #divide the critical time step to compute a time step during loading
+        i_update_neighborhoods_load = 50 #frequency of the update of the wall_neighborhood of the grains and wall during the step of loading
+        factor_neighborhood_load = 1.9 #margin to detect a grain into a neighborhood
         ratio_meanDisplacement_meanRadius_load = 0.003 #criteria on kinetic energy to detect the steady-state
         i_DEM_stop_load = 4000 #stop criteria for DEM during the step of loading
         n_window = 100 #window to detect the steady-state
 
         #add element
         dict_ic['n_step_increase_radius'] = n_step_increase_radius
+        dict_ic['ratio_dt_DEM_crit_dt_DEM_ir'] = ratio_dt_DEM_crit_dt_DEM_ir
+        dict_ic['ratio_dt_DEM_crit_dt_DEM_load'] = ratio_dt_DEM_crit_dt_DEM_load
         dict_ic['i_update_neighborhoods_ir'] = i_update_neighborhoods_ir
         dict_ic['i_update_neighborhoods_load'] = i_update_neighborhoods_load
         dict_ic['factor_neighborhood_ir'] = factor_neighborhood_ir
