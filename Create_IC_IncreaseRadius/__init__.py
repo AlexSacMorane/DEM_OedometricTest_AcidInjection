@@ -308,13 +308,13 @@ def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollici
     dict_ic['dt_DEM_IC'] = dt_DEM
 
     #trackers and stop conditions
-    Force_tracker = []
+    dict_ic['Force_tracker'] = []
     Force_stop = 0
-    Ecin_tracker = []
+    dict_ic['Ecin_tracker'] = []
     Ecin_stop = 0
     Ratio_Displacement_MeanRadius_tracker = []
-    Zmax_tracker = []
-    s_top_tracker= []
+    dict_ic['Zmax_tracker'] = []
+    dict_ic['s_top_tracker']= []
     k0_tracker = []
     k0_mean_tracker = []
     for grain in dict_ic['L_g_tempo']:
@@ -379,11 +379,11 @@ def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollici
         #Tracker
         F = F_total(dict_ic['L_g_tempo'])
         Ecin = E_cin_total(dict_ic['L_g_tempo'])
-        Force_tracker.append(F)
-        Ecin_tracker.append(Ecin)
+        dict_ic['Force_tracker'].append(F)
+        dict_ic['Ecin_tracker'].append(Ecin)
         Ratio_Displacement_MeanRadius_tracker.append(Mean_v(dict_ic['L_g_tempo'])*dict_ic['dt_DEM_IC']/np.mean(L_radius))
-        Zmax_tracker.append(dict_sample['z_box_max'])
-        s_top_tracker.append(Force_on_upper_wall/(math.pi*dict_sample['D_oedo']**2/4))
+        dict_ic['Zmax_tracker'].append(dict_sample['z_box_max'])
+        dict_ic['s_top_tracker'].append(Force_on_upper_wall/(math.pi*dict_sample['D_oedo']**2/4))
         k0_tracker.append(dict_sample['D_oedo']/4/(dict_sample['z_box_max']-dict_sample['z_box_min'])*Force_on_lateral_wall/Force_on_upper_wall)
         if len(k0_tracker) >= dict_ic['n_window'] :
             k0_mean_tracker.append(np.mean(k0_tracker[-dict_ic['n_window']:]))
@@ -391,14 +391,14 @@ def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollici
         if dict_ic['i_DEM_IC'] % dict_ic['i_print_plot_IC'] ==0:
             print('\ti_DEM',str(dict_ic['i_DEM_IC'])+'/'+str(dict_ic['i_DEM_stop_load']+i_DEM_0),':\n',\
                   '\t\tMean displacement', str(int(1000*Ratio_Displacement_MeanRadius_tracker[-1]))+'‰ of mean radius\n',\
-                  '\t\tConfinement', str(int(100*s_top_tracker[-1]/dict_sollicitation['Vertical_Confinement_Surface_Force']))+'% of the target value')
-            if max(Ecin_tracker) != 0:
-                print('\t\tKinetic energy',str(int(100*Ecin_tracker[-1]/max(Ecin_tracker)))+'% of max reached')
+                  '\t\tConfinement', str(int(100*dict_ic['s_top_tracker'][-1]/dict_sollicitation['Vertical_Confinement_Surface_Force']))+'% of the target value')
+            if max(dict_ic['Ecin_tracker']) != 0:
+                print('\t\tKinetic energy',str(int(100*dict_ic['Ecin_tracker'][-1]/max(dict_ic['Ecin_tracker'])))+'% of max reached')
             if dict_ic['Debug_DEM'] :
                 if not control_z_max :
-                    Owntools.Plot.Plot_DEM_trackers('Debug/Trackers/Init/DEM_trackers_init_calming_down.png', Force_tracker, Ecin_tracker, Ratio_Displacement_MeanRadius_tracker, Zmax_tracker, s_top_tracker, k0_tracker, k0_mean_tracker)
+                    Owntools.Plot.Plot_DEM_trackers('Debug/Trackers/Init/DEM_trackers_init_calming_down.png', dict_ic['Force_tracker'], dict_ic['Ecin_tracker'], Ratio_Displacement_MeanRadius_tracker, dict_ic['Zmax_tracker'], dict_ic['s_top_tracker'], k0_tracker, k0_mean_tracker)
                 else :
-                    Owntools.Plot.Plot_DEM_trackers('Debug/Trackers/Init/DEM_trackers_init_loading.png', Force_tracker, Ecin_tracker, Ratio_Displacement_MeanRadius_tracker, Zmax_tracker, s_top_tracker, k0_tracker, k0_mean_tracker)
+                    Owntools.Plot.Plot_DEM_trackers('Debug/Trackers/Init/DEM_trackers_init_loading.png', dict_ic['Force_tracker'], dict_ic['Ecin_tracker'], Ratio_Displacement_MeanRadius_tracker, dict_ic['Zmax_tracker'], dict_ic['s_top_tracker'], k0_tracker, k0_mean_tracker)
                 Owntools.Write.Write_grains_vtk('Debug/Configuration/Init/grains_'+str(dict_ic['i_DEM_IC'])+'.vtk', dict_ic['L_g_tempo'])
                 Owntools.Write.Write_box_vtk('Debug/Configuration/Init/box_'+str(dict_ic['i_DEM_IC'])+'.vtk', dict_sample)
 
@@ -407,12 +407,12 @@ def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollici
              DEM_loop_statut = False
         if dict_sollicitation['gravity'] > 0:
             if Ecin < Ecin_stop and F < Force_stop :
-                window_s_top = s_top_tracker[-dict_ic['n_window']:]
+                window_s_top = dict_ic['s_top_tracker'][-dict_ic['n_window']:]
                 if (0.95*dict_sollicitation['Vertical_Confinement_Surface_Force']<min(window_s_top) and max(window_s_top)<1.05*dict_sollicitation['Vertical_Confinement_Surface_Force']):
                     DEM_loop_statut = False
         else:
             if Ecin < Ecin_stop and dict_ic['i_DEM_IC'] >= dict_ic['i_DEM_stop_load']*0.1 + i_DEM_0 :
-                window_s_top = s_top_tracker[-dict_ic['n_window']:]
+                window_s_top = dict_ic['s_top_tracker'][-dict_ic['n_window']:]
                 window_k0_top = k0_tracker[-dict_ic['n_window']:]
                 if control_z_max :
                     if (0.95*dict_sollicitation['Vertical_Confinement_Surface_Force']<min(window_s_top) and max(window_s_top)<1.05*dict_sollicitation['Vertical_Confinement_Surface_Force']) and \
