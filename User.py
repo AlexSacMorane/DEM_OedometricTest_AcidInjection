@@ -119,7 +119,7 @@ def All_parameters():
     #DEM parameters
     ratio_dt_DEM_crit_dt_DEM = 5 #divide the critical time step to compute a time step
     factor_neighborhood = 1.9 #margin to detect a grain into a neighborhood
-    i_update_neighborhoods = 200 #the frequency of the update of the neighborhood of the grains and the walls
+    i_update_neighborhoods = 50 #the frequency of the update of the neighborhood of the grains and the walls
     #Stop criteria of the DEM
     i_DEM_stop = 4000 #maximum iteration for one DEM simulation
     ratio_meanDisplacement_meanRadius = 0.0001
@@ -176,7 +176,7 @@ def All_parameters():
     #common option
     n_generation = 1 #number of grains generation
     Debug_DEM_IC = True #plot configuration inside DEM during IC
-    i_print_plot_IC = 200 #frenquency of the print and plot (if Debug_DEM_IC) for IC
+    i_print_plot_IC = 300 #frenquency of the print and plot (if Debug_DEM_IC) for IC
 
     #write dict
     dict_ic = {
@@ -196,7 +196,7 @@ def All_parameters():
         ratio_meanDisplacement_meanRadius_IC = 0.0005 #criteria on kinetic energy to detect the steady-state
         factor_neighborhood_IC = 1.8 #margin to detect a grain into a neighborhood
         i_update_neighborhoods_gen = 50 #the frequency of the update of the neighborhood of the grains and the walls during IC generations
-        i_update_neighborhoods_com = 200 #the frequency of the update of the neighborhood of the grains and the walls during IC combination
+        i_update_neighborhoods_com = 100 #the frequency of the update of the neighborhood of the grains and the walls during IC combination
         gravity = 100*N_grain/n_generation*(factor_zmax_box)*dict_geometry['R_50']**3/D_oedo**2/i_DEM_stop_IC**2/dt_DEM_IC**2 #apply only in the ic phase with one generation µm/s2
 
         #add element
@@ -223,7 +223,7 @@ def All_parameters():
         i_update_neighborhoods_load = 50 #frequency of the update of the wall_neighborhood of the grains and wall during the step of loading
         factor_neighborhood_load = 1.9 #margin to detect a grain into a neighborhood
         ratio_meanDisplacement_meanRadius_load = 0.003 #criteria on kinetic energy to detect the steady-state
-        i_DEM_stop_load = 4000 #stop criteria for DEM during the step of loading
+        i_DEM_stop_load = 5000 #stop criteria for DEM during the step of loading
         n_window = 100 #window to detect the steady-state
 
         #add element
