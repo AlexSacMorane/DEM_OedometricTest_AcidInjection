@@ -158,7 +158,7 @@ def All_parameters():
     Vertical_Confinement_Surface_Force = 100*10**-3 #µN/µm2 used to compute the Vertical_Confinement_Force
     Vertical_Confinement_Force = Vertical_Confinement_Surface_Force*(math.pi*D_oedo**2/4) #µN
     f_R50_0_dissolved = 0.005 #fraction of the initial mean radius dissolved
-    kp_wall = 1 #proportionnal coefficient to apply confinement pressure
+    kp_wall = 5*10**-8 #proportionnal coefficient to apply confinement pressure
 
     dict_sollicitation = {
     'gravity' : gravity,
@@ -214,15 +214,15 @@ def All_parameters():
 
     #IncreaseRadius
     if method_ic == 'IncreaseRadius' :
-        n_step_increase_radius = 50 #number of step to increase the radius
+        n_step_increase_radius = 25 #number of step to increase the radius
         i_update_neighborhoods_ir = 50 #frequency of the update of the wall_neighborhood of the grains and wall during the step of radius increase
         factor_neighborhood_ir = 1.5 #margin to detect a grain into a neighborhood
         ratio_Ecin_maxEcin_ir = 0.3 # criteria on kinetic energy to detect the steady-state, fraction of the maximum kinetic energy reached
         i_DEM_stop_ir = 1000 #stop criteria for DEM during the step of radius increase
-        i_update_neighborhoods_load = 50 #frequency of the update of the wall_neighborhood of the grains and wall during the step of loading
+        i_update_neighborhoods_load = 200 #frequency of the update of the wall_neighborhood of the grains and wall during the step of loading
         factor_neighborhood_load = 3 #margin to detect a grain into a neighborhood
-        ratio_meanDisplacement_meanRadius_load = 0.0005 #criteria on kinetic energy to detect the steady-state
-        i_DEM_stop_load = 5000 #stop criteria for DEM during the step of loading
+        ratio_meanDisplacement_meanRadius_load = 0.003 #criteria on kinetic energy to detect the steady-state
+        i_DEM_stop_load = 4000 #stop criteria for DEM during the step of loading
         n_window = 100 #window to detect the steady-state
 
         #add element
