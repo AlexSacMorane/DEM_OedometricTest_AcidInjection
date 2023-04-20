@@ -52,8 +52,6 @@ def LG_tempo(dict_algorithm, dict_geometry, dict_ic, dict_material, dict_sample,
     #compute dz from e_target and PSD
     dz = dict_sample['D_oedo']*0.6/dict_ic['n_generation']
     dict_sample['z_box_min_ic'] = dict_sample['z_box_min']
-    dict_sample['z_box_max'] = dict_sample['z_box_min_ic'] + dz
-
     #---------------------------------------------------------------------------
 
     for i_generation in range(1,dict_ic['n_generation']+1) :
@@ -63,6 +61,7 @@ def LG_tempo(dict_algorithm, dict_geometry, dict_ic, dict_material, dict_sample,
         #add elements in dicts
         dict_ic['L_g_tempo'] = []
         dict_ic['i_generation'] = i_generation
+        dict_sample['z_box_max'] = dict_sample['z_box_min_ic'] + dz
 
         #create grains
         Create_grains(dict_ic, dict_geometry, dict_sample, dict_material, simulation_report)
@@ -72,7 +71,6 @@ def LG_tempo(dict_algorithm, dict_geometry, dict_ic, dict_material, dict_sample,
 
         #update element in dict
         dict_sample['z_box_min_ic'] = dict_sample['z_box_max']
-        dict_sample['z_box_max'] = dict_sample['z_box_min_ic'] + dz
         dict_ic['L_L_g_tempo'].append(dict_ic['L_g_tempo'].copy())
 
     simulation_report.tac_tempo('Radius expansion')
@@ -180,7 +178,7 @@ def Increase_radius(dict_ic, dict_material, dict_sample, simulation_report):
 
         #update dt_DEM
         dt_DEM_crit = math.pi*min(L_radius)/(0.16*dict_material['nu']+0.88)*math.sqrt(dict_material['rho']*(2+2*dict_material['nu'])/dict_material['Y']) #s critical time step from O'Sullivan 2011
-        dt_DEM = dt_DEM_crit/dict_ic['ratio_dt_DEM_crit_dt_DEM'] #s time step during DEM simulation
+        dt_DEM = dt_DEM_crit/dict_ic['ratio_dt_DEM_crit_dt_DEM_ir'] #s time step during DEM simulation
         dict_ic['dt_DEM_IC'] = dt_DEM
 
         #Initialisation
@@ -304,7 +302,7 @@ def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollici
     for grain in dict_ic['L_g_tempo']:
         L_radius.append(grain.radius)
     dt_DEM_crit = math.pi*min(L_radius)/(0.16*dict_material['nu']+0.88)*math.sqrt(dict_material['rho']*(2+2*dict_material['nu'])/dict_material['Y']) #s critical time step from O'Sullivan 2011
-    dt_DEM = dt_DEM_crit/dict_ic['ratio_dt_DEM_crit_dt_DEM'] #s time step during DEM simulation
+    dt_DEM = dt_DEM_crit/dict_ic['ratio_dt_DEM_crit_dt_DEM_load'] #s time step during DEM simulation
     dict_ic['dt_DEM_IC'] = dt_DEM
 
     #trackers and stop conditions
