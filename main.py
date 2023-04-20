@@ -157,7 +157,7 @@ def main_simulation(dict_algorithm, dict_geometry, dict_material, dict_sample, d
         dict_algorithm['i_dissolution'] = dict_algorithm['i_dissolution'] + 1
 
         #dissolve material
-        dissolve_material(dict_geometry, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
+        dissolve_material(dict_geometry, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
         simulation_report.write_and_print('Step '+str(dict_algorithm['i_dissolution'])+'/'+str(dict_algorithm['n_dissolution'])+' : percentage of initial mass dissolved '+str(round(dict_tracker['L_mass_dissolved'][-1]/dict_tracker['L_mass'][0],2))+'/'+str(dict_algorithm['f_mass0_dissolved_mas'])+'\n\n',\
                                           'Step '+str(dict_algorithm['i_dissolution'])+'/'+str(dict_algorithm['n_dissolution'])+' : percentage of initial mass dissolved '+str(round(dict_tracker['L_mass_dissolved'][-1]/dict_tracker['L_mass'][0],2))+'/'+str(dict_algorithm['f_mass0_dissolved_mas'])+'\n')
 
@@ -311,7 +311,7 @@ def DEM_loading(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_
         Force_on_upper_wall = 0
         Force_on_lateral_wall = 0
         for contact in dict_sample['L_contact_gw']:
-            if contact.nature == 'gz_max':
+            if contact.nature == 'gwz_max':
                 Force_on_upper_wall = Force_on_upper_wall + contact.Fwg_n
             if contact.nature == 'gwlat':
                 Force_on_lateral_wall = Force_on_lateral_wall + contact.Fwg_n
