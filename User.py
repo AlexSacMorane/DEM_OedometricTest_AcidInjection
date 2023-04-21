@@ -36,12 +36,12 @@ def All_parameters():
     #---------------------------------------------------------------------------
     #Geometry parameters
 
-    N_grain = 1000 #total number of grains
+    N_grain = 4000 #total number of grains
 
     #a normal law is assumed for the PSDs
 
     #PSD 1
-    R_50_1 = 300 #µm expectation
+    R_50_1 = 500 #µm expectation
     sigma_psd_1 = 50 #µm standard deviation
     #95% are in [R_50-2*sigma_psd, R_50+2*sigma_psd]
     #99,7% is in [R_50-3*sigma_psd, R_50+3*sigma_psd]
@@ -60,7 +60,7 @@ def All_parameters():
     R_50 = number_ratio_1_1and2*R_50_1 + (1-number_ratio_1_1and2)*R_50_2
 
     #target for compacity e = Vg/Vb
-    e_target = 0.7 #for IC with grain radius
+    e_target = 0.55 #for IC with grain radius
 
     #write dict
     dict_geometry = {
@@ -154,11 +154,11 @@ def All_parameters():
     #External sollicitation parameters
 
     gravity = 0 #µm/s2
-    Vertical_Confinement_Surface_Force = 100*10**-3 #µN/µm2 used to compute the Vertical_Confinement_Force
+    Vertical_Confinement_Surface_Force = 300*10**-3 #µN/µm2 used to compute the Vertical_Confinement_Force
     Vertical_Confinement_Force = Vertical_Confinement_Surface_Force*(math.pi*D_oedo**2/4) #µN
     f_R50_0_dissolved = 0.005 #fraction of the initial mean radius dissolved
     kp_wall = 10**-9 #proportionnal coefficient to apply confinement pressure
-    kp_wall_focus = kp_wall/100 #proportionnal coefficient to apply confinement pressure near the target
+    kp_wall_focus = kp_wall/1000 #proportionnal coefficient to apply confinement pressure near the target
 
     dict_sollicitation = {
     'gravity' : gravity,
@@ -178,7 +178,7 @@ def All_parameters():
     #common option
     n_generation = 1 #number of grains generation
     Debug_DEM_IC = True #plot configuration inside DEM during IC
-    i_print_plot_IC = 300 #frenquency of the print and plot (if Debug_DEM_IC) for IC
+    i_print_plot_IC = 400 #frenquency of the print and plot (if Debug_DEM_IC) for IC
 
     #write dict
     dict_ic = {
@@ -225,7 +225,7 @@ def All_parameters():
         i_update_neighborhoods_load = 50 #frequency of the update of the wall_neighborhood of the grains and wall during the step of loading
         factor_neighborhood_load = 1.9 #margin to detect a grain into a neighborhood
         ratio_meanDisplacement_meanRadius_load = 0.003 #criteria on kinetic energy to detect the steady-state
-        i_DEM_stop_load = 5000 #stop criteria for DEM during the step of loading
+        i_DEM_stop_load = 6000 #stop criteria for DEM during the step of loading
         n_window = 100 #window to detect the steady-state
 
         #add element
