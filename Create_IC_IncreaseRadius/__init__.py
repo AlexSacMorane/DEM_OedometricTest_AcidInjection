@@ -385,7 +385,10 @@ def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollici
         Ratio_Displacement_MeanRadius_tracker.append(Mean_v(dict_ic['L_g_tempo'])*dict_ic['dt_DEM_IC']/np.mean(L_radius))
         dict_ic['Zmax_tracker'].append(dict_sample['z_box_max'])
         dict_ic['s_top_tracker'].append(Force_on_upper_wall/(math.pi*dict_sample['D_oedo']**2/4))
-        k0_tracker.append(dict_sample['D_oedo']/4/(dict_sample['z_box_max']-dict_sample['z_box_min'])*Force_on_lateral_wall/Force_on_upper_wall)
+        if Force_on_upper_wall != 0 :
+            k0_tracker.append(dict_sample['D_oedo']/4/(dict_sample['z_box_max']-dict_sample['z_box_min'])*Force_on_lateral_wall/Force_on_upper_wall)
+        else :
+            k0_tracker.append(0)
         if len(k0_tracker) >= dict_ic['n_window'] :
             k0_mean_tracker.append(np.mean(k0_tracker[-dict_ic['n_window']:]))
 
