@@ -216,9 +216,9 @@ def All_parameters():
     #IncreaseRadius
     if method_ic == 'IncreaseRadius' :
         n_step_increase_radius = 25 #number of step to increase the radius
-        ratio_dt_DEM_crit_dt_DEM_ir = 4 #divide the critical time step to compute a time step during radius expansion
+        ratio_dt_DEM_crit_dt_DEM_ir = 5 #divide the critical time step to compute a time step during radius expansion
         i_update_neighborhoods_ir = 50 #frequency of the update of the wall_neighborhood of the grains and wall during the step of radius increase
-        factor_neighborhood_ir = 1.5 #margin to detect a grain into a neighborhood
+        factor_neighborhood_ir = 2.5 #margin to detect a grain into a neighborhood
         ratio_Ecin_maxEcin_ir = 0.3 # criteria on kinetic energy to detect the steady-state, fraction of the maximum kinetic energy reached
         i_DEM_stop_ir = 1000 #stop criteria for DEM during the step of radius increase
         ratio_dt_DEM_crit_dt_DEM_load = 5 #divide the critical time step to compute a time step during loading
