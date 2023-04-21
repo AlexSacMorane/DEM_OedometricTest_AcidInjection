@@ -367,7 +367,10 @@ def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollici
                 Force_on_upper_wall = Force_on_upper_wall + contact.Fwg_n
             if contact.nature == 'gwlat':
                 Force_on_lateral_wall = Force_on_lateral_wall + contact.Fwg_n
-        dz_max = dict_sollicitation['kp_wall']*(Force_on_upper_wall - dict_sollicitation['Vertical_Confinement_Force'])
+        if abs(Force_on_upper_wall - dict_sollicitation['Vertical_Confinement_Force'])/dict_sollicitation['Vertical_Confinement_Force'] > 5:
+            dz_max = dict_sollicitation['kp_wall']*(Force_on_upper_wall - dict_sollicitation['Vertical_Confinement_Force'])
+        else :
+            dz_max = dict_sollicitation['kp_wall_focus']*(Force_on_upper_wall - dict_sollicitation['Vertical_Confinement_Force'])
         if abs(dz_max) > dict_ic['factor_neighborhood_load']*min(L_radius)/dict_ic['i_update_neighborhoods_load']:
             dz_max = np.sign(dz_max)*dict_ic['factor_neighborhood_load']*min(L_radius)/dict_ic['i_update_neighborhoods_load']
         if not control_z_max:

@@ -317,7 +317,10 @@ def DEM_loading(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_
                 Force_on_lateral_wall = Force_on_lateral_wall + contact.Fwg_n
         dict_sample['Force_on_upper_wall'] = Force_on_upper_wall
         dict_sample['Force_on_lateral_wall'] = Force_on_lateral_wall
-        dz_max = dict_sollicitation['kp_wall']*(Force_on_upper_wall - dict_sollicitation['Vertical_Confinement_Force'])
+        if abs(Force_on_upper_wall - dict_sollicitation['Vertical_Confinement_Force'])/dict_sollicitation['Vertical_Confinement_Force'] > 5:
+            dz_max = dict_sollicitation['kp_wall']*(Force_on_upper_wall - dict_sollicitation['Vertical_Confinement_Force'])
+        else :
+            dz_max = dict_sollicitation['kp_wall_focus']*(Force_on_upper_wall - dict_sollicitation['Vertical_Confinement_Force'])
         if abs(dz_max) > dict_algorithm['factor_neighborhood']*min(dict_sample['L_radius'])/dict_algorithm['i_update_neighborhoods']:
             dz_max = np.sign(dz_max)*dict_algorithm['factor_neighborhood']*min(dict_sample['L_radius'])/dict_algorithm['i_update_neighborhoods']
         dict_sample['z_box_max'] = dict_sample['z_box_max'] + dz_max
