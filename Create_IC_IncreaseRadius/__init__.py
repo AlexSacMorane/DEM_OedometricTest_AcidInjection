@@ -318,6 +318,7 @@ def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollici
     Ecin_stop = 0
     Ratio_Displacement_MeanRadius_tracker = []
     dict_ic['Zmax_tracker'] = []
+    dict_ic['n_contact_gwz_max_tracker'] = []
     dict_ic['s_top_tracker']= []
     k0_tracker = []
     k0_mean_tracker = []
@@ -367,9 +368,11 @@ def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollici
         #Control the z_max to have the pressure target
         #and compute k0
         Force_on_upper_wall = 0
+        n_contact_gwz_max = 0
         Force_on_lateral_wall = 0
         for contact in dict_ic['L_contact_gw']:
             if contact.nature == 'gwz_max':
+                n_contact_gwz_max = n_contact_gwz_max + 1
                 Force_on_upper_wall = Force_on_upper_wall + contact.Fwg_n
             if contact.nature == 'gwlat':
                 Force_on_lateral_wall = Force_on_lateral_wall + contact.Fwg_n
@@ -390,6 +393,7 @@ def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollici
         dict_ic['Ecin_tracker'].append(Ecin)
         Ratio_Displacement_MeanRadius_tracker.append(Mean_v(dict_ic['L_g_tempo'])*dict_ic['dt_DEM_IC']/np.mean(L_radius))
         dict_ic['Zmax_tracker'].append(dict_sample['z_box_max'])
+        dict_ic['n_contact_gwz_max_tracker'].append(n_contact_gwz_max)
         dict_ic['s_top_tracker'].append(Force_on_upper_wall/(math.pi*dict_sample['D_oedo']**2/4))
         if Force_on_upper_wall != 0 :
             k0_tracker.append(dict_sample['D_oedo']/4/(dict_sample['z_box_max']-dict_sample['z_box_min'])*Force_on_lateral_wall/Force_on_upper_wall)
