@@ -55,7 +55,7 @@ class Grain:
 
     #-------------------------------------------------------------------------------
 
-    def euler_semi_implicite(self, dt_DEM):
+    def euler_semi_implicite(self, dt_DEM, v_limit):
         """
         Move the grain following a semi implicit euler scheme.
 
