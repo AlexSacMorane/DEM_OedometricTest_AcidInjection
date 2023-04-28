@@ -257,7 +257,8 @@ def DEM_loading(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_
     Ecin_stop = 0
     Ratio_Displacement_MeanRadius_tracker = []
     Zmax_tracker = []
-    s_top_tracker= []
+    s_top_tracker = []
+    k0_tracker = []
     k0_mean_tracker = []
     for grain in dict_sample['L_g']:
         Force_stop = Force_stop + 0.5*grain.mass*dict_sollicitation['gravity']
@@ -332,9 +333,8 @@ def DEM_loading(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_
         Ecin_tracker.append(Ecin)
         Ratio_Displacement_MeanRadius_tracker.append(Owntools.Compute.Compute_mean_v(dict_sample['L_g'])*dict_algorithm['dt_DEM']/np.mean(dict_sample['L_radius']))
         Zmax_tracker.append(dict_sample['z_box_max'])
-        F_top_tracker.append(dict_sollicitation['Force_on_upper_wall'])
-        s_top_tracker.append(dict_sollicitation['Force_on_upper_wall']/(math.pi*dict_sample['D_oedo']**2/4))
-        k0_tracker.append(dict_sample['D_oedo']/4/(dict_sample['z_box_max']-dict_sample['z_box_min'])*dict_sollicitation['Force_on_lateral_wall']/dict_sollicitation['Force_on_upper_wall'])
+        s_top_tracker.append(dict_sample['Force_on_upper_wall']/(math.pi*dict_sample['D_oedo']**2/4))
+        k0_tracker.append(dict_sample['D_oedo']/4/(dict_sample['z_box_max']-dict_sample['z_box_min'])*dict_sample['Force_on_lateral_wall']/dict_sample['Force_on_upper_wall'])
         if len(k0_tracker) >= dict_algorithm['n_window'] :
             k0_mean_tracker.append(np.mean(k0_tracker[-dict_algorithm['n_window']:]))
 
@@ -353,14 +353,14 @@ def DEM_loading(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_
              DEM_loop_statut = False
         if dict_sollicitation['gravity'] > 0:
             if Ecin < Ecin_stop and F < Force_stop and dict_algorithm['i_DEM'] >= dict_algorithm['i_DEM_stop']*0.1 + i_DEM_0 :
-                window_F_top = F_top_tracker[-dict_algorithm['n_window']:]
-                if (0.95*dict_sollicitation['Vertical_Confinement_Force']<min(window_F_top) and max(window_F_top)<1.05*dict_sollicitation['Vertical_Confinement_Force']):
+                window_s_top = s_top_tracker[-dict_algorithm['n_window']:]
+                if (0.95*dict_sollicitation['Vertical_Confinement_Surface_Force']<min(window_s_top) and max(window_s_top)<1.05*dict_sollicitation['Vertical_Confinement_Surface_Force']):
                     DEM_loop_statut = False
         else:
             if Ecin < Ecin_stop and dict_algorithm['i_DEM'] >= dict_algorithm['i_DEM_stop']*0.1 + i_DEM_0 :
-                window_F_top = F_top_tracker[-dict_algorithm['n_window']:]
+                window_s_top = s_top_tracker[-dict_algorithm['n_window']:]
                 window_k0_top = k0_tracker[-dict_algorithm['n_window']:]
-                if (0.95*dict_sollicitation['Vertical_Confinement_Force']<min(window_F_top) and max(window_F_top)<1.05*dict_sollicitation['Vertical_Confinement_Force']) and \
+                if (0.95*dict_sollicitation['Vertical_Confinement_Surface_Force']<min(window_s_top) and max(window_s_top)<1.05*dict_sollicitation['Vertical_Confinement_Surface_Force']) and \
                    (max(window_k0_top) - min(window_k0_top) < dict_algorithm['dk0_window']):
                     DEM_loop_statut = False
         if dict_sample['L_g'] == []:
