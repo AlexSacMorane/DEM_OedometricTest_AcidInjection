@@ -122,7 +122,6 @@ def create_ic(dict_geometry, dict_ic, dict_material, dict_sample, dict_sollicita
     #save data
     Owntools.Save.save_dicts_ic('Dicts/save_ic', dict_algorithm, dict_geometry, dict_ic, dict_material, dict_sample, dict_sollicitation, simulation_report)
 
-
 #-------------------------------------------------------------------------------
 
 def main_simulation(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report):
