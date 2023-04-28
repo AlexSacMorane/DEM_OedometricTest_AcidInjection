@@ -36,7 +36,7 @@ def All_parameters():
     #---------------------------------------------------------------------------
     #Geometry parameters
 
-    N_grain = 4000 #total number of grains
+    N_grain = 2000 #total number of grains
 
     #a normal law is assumed for the PSDs
 
@@ -117,12 +117,12 @@ def All_parameters():
     f_mass0_dissolved_mas = 0.5 #maximum of the initial mass dissolved
 
     #DEM parameters
-    ratio_dt_DEM_crit_dt_DEM = 5 #divide the critical time step to compute a time step
-    factor_neighborhood = 1.9 #margin to detect a grain into a neighborhood
-    i_update_neighborhoods = 50 #the frequency of the update of the neighborhood of the grains and the walls
+    ratio_dt_DEM_crit_dt_DEM = 10 #divide the critical time step to compute a time step
+    factor_neighborhood = 3.1 #margin to detect a grain into a neighborhood
+    i_update_neighborhoods = 200 #the frequency of the update of the neighborhood of the grains and the walls
     #Stop criteria of the DEM
     i_DEM_stop = 4000 #maximum iteration for one DEM simulation
-    ratio_meanDisplacement_meanRadius = 0.0001
+    ratio_meanDisplacement_meanRadius = 0.003 #must be smaller than 1/i_update_neighborhoods
     n_window = 100
     dk0_window = 0.05 #delta k0 in the window
 
@@ -158,7 +158,7 @@ def All_parameters():
     Vertical_Confinement_Force = Vertical_Confinement_Surface_Force*(math.pi*D_oedo**2/4) #µN
     f_R50_0_dissolved = 0.005 #fraction of the initial mean radius dissolved
     kp_wall = 10**-9 #proportionnal coefficient to apply confinement pressure
-    kp_wall_focus = kp_wall/1000 #proportionnal coefficient to apply confinement pressure near the target
+    kp_wall_focus = 10**-8 #proportionnal coefficient to apply confinement pressure near the target
 
     dict_sollicitation = {
     'gravity' : gravity,
@@ -178,7 +178,7 @@ def All_parameters():
     #common option
     n_generation = 1 #number of grains generation
     Debug_DEM_IC = True #plot configuration inside DEM during IC
-    i_print_plot_IC = 400 #frenquency of the print and plot (if Debug_DEM_IC) for IC
+    i_print_plot_IC = 200 #frenquency of the print and plot (if Debug_DEM_IC) for IC
 
     #write dict
     dict_ic = {
@@ -215,18 +215,18 @@ def All_parameters():
 
     #IncreaseRadius
     if method_ic == 'IncreaseRadius' :
-        n_step_increase_radius = 25 #number of step to increase the radius
+        n_step_increase_radius = 15 #number of step to increase the radius
         ratio_dt_DEM_crit_dt_DEM_ir = 5 #divide the critical time step to compute a time step during radius expansion
-        i_update_neighborhoods_ir = 50 #frequency of the update of the wall_neighborhood of the grains and wall during the step of radius increase
-        factor_neighborhood_ir = 2.5 #margin to detect a grain into a neighborhood
+        i_update_neighborhoods_ir = 100 #frequency of the update of the wall_neighborhood of the grains and wall during the step of radius increase
+        factor_neighborhood_ir = 3.5 #margin to detect a grain into a neighborhood
         ratio_Ecin_maxEcin_ir = 0.3 # criteria on kinetic energy to detect the steady-state, fraction of the maximum kinetic energy reached
-        i_DEM_stop_ir = 1000 #stop criteria for DEM during the step of radius increase
-        ratio_dt_DEM_crit_dt_DEM_load = 5 #divide the critical time step to compute a time step during loading
-        i_update_neighborhoods_load = 50 #frequency of the update of the wall_neighborhood of the grains and wall during the step of loading
-        factor_neighborhood_load = 1.9 #margin to detect a grain into a neighborhood
-        ratio_meanDisplacement_meanRadius_load = 0.003 #criteria on kinetic energy to detect the steady-state
+        i_DEM_stop_ir = 2000 #stop criteria for DEM during the step of radius increase
+        ratio_dt_DEM_crit_dt_DEM_load = 10 #divide the critical time step to compute a time step during loading
+        i_update_neighborhoods_load = 150 #frequency of the update of the wall_neighborhood of the grains and wall during the step of loading
+        factor_neighborhood_load = 3.1 #margin to detect a grain into a neighborhood
+        ratio_meanDisplacement_meanRadius_load = 0.003 #criteria on kinetic energy to detect the steady-state, must be smaller than 1/i_update_neighborhoods
         i_DEM_stop_load = 6000 #stop criteria for DEM during the step of loading
-        n_window = 100 #window to detect the steady-state
+        n_window = 50 #window to detect the steady-state
 
         #add element
         dict_ic['n_step_increase_radius'] = n_step_increase_radius
