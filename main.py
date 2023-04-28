@@ -105,13 +105,13 @@ def create_ic(dict_geometry, dict_ic, dict_material, dict_sample, dict_sollicita
     #create the initial configuration
     if dict_ic['method_ic'] == 'Deposition' :
         Create_IC.LG_tempo(dict_geometry, dict_ic, dict_material, dict_sample, dict_sollicitation, simulation_report)
+        Create_IC.From_LG_tempo_to_usable(dict_ic, dict_sample)
     elif dict_ic['method_ic'] == 'IncreaseRadius':
         Create_IC_IncreaseRadius.LG_tempo(dict_algorithm, dict_geometry, dict_ic, dict_material, dict_sample, dict_sollicitation, simulation_report)
+        #Convert the tempo grain to real grain
+        Create_IC_IncreaseRadius.From_LG_tempo_to_usable(dict_ic, dict_sample)
     else :
         raise ValueError('IC generation method is not available...')
-
-    #Convert the tempo grain to real grain
-    Create_IC.From_LG_tempo_to_usable(dict_ic, dict_sample)
 
     #compute and plot the PSD
     Owntools.Compute.Compute_PSD(dict_sample)
