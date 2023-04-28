@@ -47,7 +47,7 @@ class Contact_gw_Tempo:
     self.nature = Nature
     self.overlap = Overlap
     self.nwg = Nwg
-    factor = 5 #factor just to increase the stiffness
+    factor = 1 #factor just to increase the stiffness
     self.k = factor*4/3*self.g.y/(1-self.g.nu*self.g.nu)*math.sqrt(self.g.radius) #Hertz law
     self.coeff_restitution = dict_material['coeff_restitution']
     self.mu = 0
