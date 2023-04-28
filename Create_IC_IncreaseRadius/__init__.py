@@ -437,6 +437,14 @@ def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollici
         if dict_ic['L_g_tempo'] == []:
             DEM_loop_statut = False
 
+    #last plot/debug
+    if dict_ic['Debug_DEM'] :
+        if not control_z_max :
+            Owntools.Plot.Plot_DEM_trackers('Debug/Trackers/Init/DEM_trackers_init_calming_down.png', dict_ic['Force_tracker'], dict_ic['Ecin_tracker'], Ratio_Displacement_MeanRadius_tracker, dict_ic['Zmax_tracker'], dict_ic['s_top_tracker'], k0_tracker, k0_mean_tracker)
+        else :
+            Owntools.Plot.Plot_DEM_trackers('Debug/Trackers/Init/DEM_trackers_init_loading.png', dict_ic['Force_tracker'], dict_ic['Ecin_tracker'], Ratio_Displacement_MeanRadius_tracker, dict_ic['Zmax_tracker'], dict_ic['s_top_tracker'], k0_tracker, k0_mean_tracker)
+        Owntools.Write.Write_grains_vtk('Debug/Configuration/Init/grains_'+str(dict_ic['i_DEM_IC'])+'.vtk', dict_ic['L_g_tempo'])
+        Owntools.Write.Write_box_vtk('Debug/Configuration/Init/box_'+str(dict_ic['i_DEM_IC'])+'.vtk', dict_sample)
 
 #-------------------------------------------------------------------------------
 
