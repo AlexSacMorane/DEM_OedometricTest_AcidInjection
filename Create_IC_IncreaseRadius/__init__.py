@@ -348,7 +348,7 @@ def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollici
 
         #Move grains
         for grain in dict_ic['L_g_tempo']:
-            grain.euler_semi_implicite(dict_ic['dt_DEM_IC'])
+            grain.euler_semi_implicite(dict_ic['dt_DEM_IC'], dict_ic['factor_neighborhood_load']*grain.radius/dict_ic['dt_DEM_IC']/dict_ic['i_update_neighborhoods_load'])
 
         #check if some grains are outside of the study box
         L_ig_to_delete = []
