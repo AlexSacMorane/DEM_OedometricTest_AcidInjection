@@ -263,6 +263,12 @@ def Increase_radius(dict_ic, dict_material, dict_sample, simulation_report):
             if dict_ic['L_g_tempo'] == []:
                 DEM_loop_statut = False
 
+        #last plot/debug
+        if dict_ic['Debug_DEM'] :
+            Owntools.Write.Write_grains_vtk('Debug/Configuration/Init/grains_'+str(dict_ic['i_DEM_IC'])+'.vtk', dict_ic['L_g_tempo'])
+            Owntools.Write.Write_box_vtk('Debug/Configuration/Init/box_'+str(dict_ic['i_DEM_IC'])+'.vtk', dict_sample)
+            Owntools.Plot.Plot_ir_trackers('Debug/Trackers/Init/Radius_Expansion.png', L_Ecin_tracker, L_Ratio_Displacement_MeanRadius_tracker, L_n_contact_tracker)
+
 #-------------------------------------------------------------------------------
 
 def DEM_loading(dict_ic, dict_geometry, dict_material, dict_sample, dict_sollicitation, control_z_max, simulation_report):

@@ -366,6 +366,12 @@ def DEM_loading(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_
         if dict_sample['L_g'] == []:
             DEM_loop_statut = False
 
+    #last plot/debug
+    if dict_algorithm['Debug_DEM'] :
+        Owntools.Plot.Plot_DEM_trackers('Debug/Trackers/Main/DEM_trackers_'+str(dict_algorithm['i_dissolution'])+'.png', Force_tracker, Ecin_tracker, Ratio_Displacement_MeanRadius_tracker, Zmax_tracker, s_top_tracker, k0_tracker, k0_mean_tracker)
+        Owntools.Write.Write_grains_vtk('Debug/Configuration/Main/grains_'+str(dict_algorithm['i_DEM'])+'.vtk', dict_sample['L_g'])
+        Owntools.Write.Write_box_vtk('Debug/Configuration/Main/box_'+str(dict_algorithm['i_DEM'])+'.vtk', dict_sample)
+
 #-------------------------------------------------------------------------------
 
 def close_main(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report):
