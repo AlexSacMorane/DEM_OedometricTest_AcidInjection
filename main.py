@@ -358,7 +358,7 @@ def DEM_loading(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_
             print('\ti_DEM',str(dict_algorithm['i_DEM'])+'/'+str(dict_algorithm['i_DEM_stop']+i_DEM_0),':\n',\
                   '\t\tMean displacement', str(int(1000*Ratio_Displacement_MeanRadius_tracker[-1]))+'‰ of mean radius\n',\
                   '\t\tConfinement', str(int(100*s_top_tracker[-1]/dict_sollicitation['Vertical_Confinement_Surface_Force']))+'% of the target value\n',\
-                  '\t\tKinetic energy',str(int(100*Ecin/Ecin_stop))+'% of target value')
+                  '\t\tKinetic energy',str(int(100*Ecin/max(Ecin_tracker)))+'% of max reached')
             if dict_algorithm['Debug_DEM'] :
                 Owntools.Plot.Plot_DEM_trackers('Debug/Trackers/Main/DEM_trackers_'+str(dict_algorithm['i_dissolution'])+'.png', Force_tracker, Ecin_tracker, Ratio_Displacement_MeanRadius_tracker, Zmax_tracker, s_top_tracker, k0_tracker, k0_mean_tracker)
                 Owntools.Write.Write_grains_vtk('Debug/Configuration/Main/grains_'+str(dict_algorithm['i_DEM'])+'.vtk', dict_sample['L_g'])
