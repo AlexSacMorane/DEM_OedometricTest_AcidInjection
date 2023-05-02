@@ -354,7 +354,7 @@ def DEM_loading(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_
         k0_tracker.append(dict_sample['D_oedo']/4/(dict_sample['z_box_max']-dict_sample['z_box_min'])*dict_sample['Force_on_lateral_wall']/dict_sample['Force_on_upper_wall'])
         if len(k0_tracker) >= dict_algorithm['n_window'] :
             k0_mean_tracker.append(np.mean(k0_tracker[-dict_algorithm['n_window']:]))
-        mean_n_contact_tracker.append((len(dict_sample['L_contact'])+len(dict_sample['L_contact_gw']))/len(dict_sample['L_g']))
+        mean_n_contact_tracker.append((2*len(dict_sample['L_contact'])+len(dict_sample['L_contact_gw']))/len(dict_sample['L_g']))
 
         if dict_algorithm['i_DEM'] % dict_algorithm['i_print_plot'] ==0:
             print('\ti_DEM',str(dict_algorithm['i_DEM'])+'/'+str(dict_algorithm['i_DEM_stop']+i_DEM_0),':\n',\
