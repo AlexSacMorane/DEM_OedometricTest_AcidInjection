@@ -117,13 +117,13 @@ def All_parameters():
     f_mass0_dissolved_mas = 0.5 #maximum of the initial mass dissolved
 
     #DEM parameters
-    ratio_dt_DEM_crit_dt_DEM = 10 #divide the critical time step to compute a time step
+    ratio_dt_DEM_crit_dt_DEM = 8 #divide the critical time step to compute a time step
     factor_neighborhood = 3.1 #margin to detect a grain into a neighborhood
     i_update_neighborhoods = 200 #the frequency of the update of the neighborhood of the grains and the walls
     #Stop criteria of the DEM
     i_DEM_stop = 4000 #maximum iteration for one DEM simulation
     ratio_meanDisplacement_meanRadius = 0.003 #must be smaller than 1/i_update_neighborhoods
-    n_window = 100
+    n_window = 50
     dk0_window = 0.05 #delta k0 in the window
 
     #List of plot to do
@@ -215,7 +215,7 @@ def All_parameters():
 
     #IncreaseRadius
     if method_ic == 'IncreaseRadius' :
-        n_step_increase_radius = 15 #number of step to increase the radius
+        n_step_increase_radius = 10 #number of step to increase the radius
         ratio_dt_DEM_crit_dt_DEM_ir = 5 #divide the critical time step to compute a time step during radius expansion
         i_update_neighborhoods_ir = 100 #frequency of the update of the wall_neighborhood of the grains and wall during the step of radius increase
         factor_neighborhood_ir = 3.5 #margin to detect a grain into a neighborhood
