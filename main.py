@@ -157,8 +157,8 @@ def main_simulation(dict_algorithm, dict_geometry, dict_material, dict_sample, d
 
         #dissolve material
         dissolve_material(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_sollicitation, dict_tracker, simulation_report)
-        simulation_report.write_and_print('Step '+str(dict_algorithm['i_dissolution'])+'/'+str(dict_algorithm['n_dissolution'])+' : percentage of initial mass dissolved '+str(round(dict_tracker['L_mass_dissolved'][-1]/dict_tracker['L_mass'][0],2))+'/'+str(dict_algorithm['f_mass0_dissolved_mas'])+'\n\n',\
-                                          'Step '+str(dict_algorithm['i_dissolution'])+'/'+str(dict_algorithm['n_dissolution'])+' : percentage of initial mass dissolved '+str(round(dict_tracker['L_mass_dissolved'][-1]/dict_tracker['L_mass'][0],2))+'/'+str(dict_algorithm['f_mass0_dissolved_mas'])+'\n')
+        simulation_report.write_and_print('Step '+str(dict_algorithm['i_dissolution'])+'/'+str(dict_algorithm['n_dissolution'])+' : percentage of initial mass dissolved '+str(round(dict_tracker['L_mass_dissolved'][-1]/dict_tracker['L_mass'][0],3))+'/'+str(dict_algorithm['f_mass0_dissolved_mas'])+'\n\n',\
+                                          'Step '+str(dict_algorithm['i_dissolution'])+'/'+str(dict_algorithm['n_dissolution'])+' : percentage of initial mass dissolved '+str(round(dict_tracker['L_mass_dissolved'][-1]/dict_tracker['L_mass'][0],3))+'/'+str(dict_algorithm['f_mass0_dissolved_mas'])+'\n')
 
         #load
         DEM_loading(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_sollicitation, simulation_report)
@@ -200,21 +200,20 @@ def dissolve_material(dict_algorithm, dict_geometry, dict_material, dict_sample,
             Nothing, but dictionnaries are updated
     """
     #compute the dr to dissolve
+    L_overlap = []    
     if dict_sample['L_contact_gw'] == [] and dict_sample['L_contact'] == [] :
-        L_overlap = []
         for i_grain in range(len(dict_sample['L_g'])-1):
             grain_i = dict_sample['L_g'][i_grain]
             for j_grain in range(i_grain+1, len(dict_sample['L_g'])):
                 grain_j = dict_sample['L_g'][j_grain]
                 if Contact_gg.Grains_contact_f(grain_i, grain_j):
                     L_overlap.append(grain_i.radius + grain_j.radius - np.linalg.norm(grain_i.center - grain_j.center))
-            dr = np.mean(L_overlap)*dict_sollicitation['f_mean_contact_dissolved']
     else :
-        L_overlap = []
         for contact in dict_sample['L_contact']:
             if contact.overlap_normal > 0 :
                 L_overlap.append(contact.overlap_normal)
-        dr = np.mean(L_overlap)*dict_sollicitation['f_mean_contact_dissolved']
+    dr = np.mean(L_overlap)*dict_sollicitation['f_mean_contact_dissolved']
+
     #to recompute the dt for the DEM
     L_radius = []
     for i_grain in range(len(dict_sample['L_g'])):
@@ -234,6 +233,7 @@ def dissolve_material(dict_algorithm, dict_geometry, dict_material, dict_sample,
             #for the moment, just undissolve the grain
         L_radius.append(grain.radius)
     dict_sample['L_radius'] = L_radius
+    dict_geometry['R_50'] = np.mean(L_radius)
 
     #update dt_DEM
     dt_DEM_crit = math.pi*min(L_radius)/(0.16*dict_material['nu']+0.88)*math.sqrt(dict_material['rho']*(2+2*dict_material['nu'])/dict_material['Y']) #s critical time step from O'Sullivan 2011
