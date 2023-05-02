@@ -200,7 +200,7 @@ def dissolve_material(dict_algorithm, dict_geometry, dict_material, dict_sample,
             Nothing, but dictionnaries are updated
     """
     #compute the dr to dissolve
-    L_overlap = []    
+    L_overlap = []
     if dict_sample['L_contact_gw'] == [] and dict_sample['L_contact'] == [] :
         for i_grain in range(len(dict_sample['L_g'])-1):
             grain_i = dict_sample['L_g'][i_grain]
@@ -276,6 +276,7 @@ def DEM_loading(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_
     s_top_tracker = []
     k0_tracker = []
     k0_mean_tracker = []
+    mean_n_contact_tracker = []
     for grain in dict_sample['L_g']:
         Force_stop = Force_stop + 0.5*grain.mass*dict_sollicitation['gravity']
         Ecin_stop = Ecin_stop + 0.5*grain.mass*(dict_algorithm['ratio_meanDisplacement_meanRadius']*grain.radius/dict_algorithm['dt_DEM'])**2
@@ -353,6 +354,7 @@ def DEM_loading(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_
         k0_tracker.append(dict_sample['D_oedo']/4/(dict_sample['z_box_max']-dict_sample['z_box_min'])*dict_sample['Force_on_lateral_wall']/dict_sample['Force_on_upper_wall'])
         if len(k0_tracker) >= dict_algorithm['n_window'] :
             k0_mean_tracker.append(np.mean(k0_tracker[-dict_algorithm['n_window']:]))
+        mean_n_contact_tracker.append((len(dict_sample['L_contact'])+len(dict_sample['L_contact_gw']))/len(dict_sample['L_g']))
 
         if dict_algorithm['i_DEM'] % dict_algorithm['i_print_plot'] ==0:
             print('\ti_DEM',str(dict_algorithm['i_DEM'])+'/'+str(dict_algorithm['i_DEM_stop']+i_DEM_0),':\n',\
@@ -361,6 +363,7 @@ def DEM_loading(dict_algorithm, dict_geometry, dict_material, dict_sample, dict_
                   '\t\tKinetic energy',str(int(100*Ecin/max(Ecin_tracker)))+'% of max reached')
             if dict_algorithm['Debug_DEM'] :
                 Owntools.Plot.Plot_DEM_trackers('Debug/Trackers/Main/DEM_trackers_'+str(dict_algorithm['i_dissolution'])+'.png', Force_tracker, Ecin_tracker, Ratio_Displacement_MeanRadius_tracker, Zmax_tracker, s_top_tracker, k0_tracker, k0_mean_tracker)
+                Owntools.Plot.Plot_custom('Debug/Trackers/Main/DEM_mean_n_contact_'+str(dict_algorithm['i_dissolution'])+'.png', range(len(mean_n_contact_tracker)), mean_n_contact_tracker, ['title'], ['mean number of contact per grain'])
                 Owntools.Write.Write_grains_vtk('Debug/Configuration/Main/grains_'+str(dict_algorithm['i_DEM'])+'.vtk', dict_sample['L_g'])
                 Owntools.Write.Write_box_vtk('Debug/Configuration/Main/box_'+str(dict_algorithm['i_DEM'])+'.vtk', dict_sample)
 
