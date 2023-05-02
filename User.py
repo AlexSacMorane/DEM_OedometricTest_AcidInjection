@@ -156,7 +156,7 @@ def All_parameters():
     gravity = 0 #µm/s2
     Vertical_Confinement_Surface_Force = 300*10**-3 #µN/µm2 used to compute the Vertical_Confinement_Force
     Vertical_Confinement_Force = Vertical_Confinement_Surface_Force*(math.pi*D_oedo**2/4) #µN
-    f_R50_0_dissolved = 0.005 #fraction of the initial mean radius dissolved
+    f_mean_contact_dissolved = 0.002 #fraction of the mean overlap dissolved
     kp_wall = 10**-9 #proportionnal coefficient to apply confinement pressure
     kp_wall_focus = 10**-8 #proportionnal coefficient to apply confinement pressure near the target
 
@@ -164,7 +164,7 @@ def All_parameters():
     'gravity' : gravity,
     'Vertical_Confinement_Surface_Force' : Vertical_Confinement_Surface_Force,
     'Vertical_Confinement_Force' : Vertical_Confinement_Force,
-    'f_R50_0_dissolved' : f_R50_0_dissolved,
+    'f_mean_contact_dissolved' : f_mean_contact_dissolved,
     'kp_wall' : kp_wall,
     'kp_wall_focus' : kp_wall_focus
     }

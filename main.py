@@ -199,19 +199,35 @@ def dissolve_material(dict_algorithm, dict_geometry, dict_material, dict_sample,
         Output :
             Nothing, but dictionnaries are updated
     """
+    #compute the dr to dissolve
+    if dict_sample['L_contact_gw'] == [] and dict_sample['L_contact'] == [] :
+        L_overlap = []
+        for i_grain in range(len(dict_sample['L_g'])-1):
+            grain_i = dict_sample['L_g'][i_grain]
+            for j_grain in range(i_grain+1, len(dict_sample['L_g'])):
+                grain_j = dict_sample['L_g'][j_grain]
+                if Contact_gg.Grains_contact_f(grain_i, grain_j):
+                    L_overlap.append(grain_i.radius + grain_j.radius - np.linalg.norm(grain_i.center - grain_j.center))
+            dr = np.mean(L_overlap)*dict_sollicitation['f_mean_contact_dissolved']
+    else :
+        L_overlap = []
+        for contact in dict_sample['L_contact']:
+            if contact.overlap_normal > 0 :
+                L_overlap.append(contact.overlap_normal)
+        dr = np.mean(L_overlap)*dict_sollicitation['f_mean_contact_dissolved']
     #to recompute the dt for the DEM
     L_radius = []
     for i_grain in range(len(dict_sample['L_g'])):
         grain = dict_sample['L_g'][i_grain]
         #dissolution
-        grain.radius = grain.radius - dict_geometry['R_50']*dict_sollicitation['f_R50_0_dissolved']
+        grain.radius = grain.radius - dr
         if grain.radius > 0 :
             #update properties
             grain.volume = 4/3*math.pi*grain.radius**3
             grain.mass = grain.rho*grain.volume
             grain.inertia = 2/5*grain.mass*grain.radius**2
         else : #no grain anymore
-            grain.radius = grain.radius + dict_geometry['R_50']*dict_sollicitation['f_R50_0_dissolved']
+            grain.radius = grain.radius + dr
             #if grain is deleted, be carefull with :
             #   - delete contact / contact_gw
             #   - update L_contact_ij / L_contact_gw_ij as indentation change
